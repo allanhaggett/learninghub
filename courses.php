@@ -17,7 +17,7 @@ $db->enableExceptions(true);
 <div class="row">
 <div class="col-md-6">
 
-<div class="mb-3"><a href="course-add.php" class="btn btn-secondary">Add Course</a></div>
+<div class="mb-3"><a href="course-add.php" class="btn btn-outline-secondary">Add Course</a></div>
 
 <?php
 
@@ -27,6 +27,7 @@ $sql = 'SELECT
             c.status AS cstatus, 
             c.description AS cdesc, 
             c.keywords AS ckeys, 
+            c.url AS curl, 
             dm.name AS dmname,
             dm.id AS dmid,
             g.name AS groupname,
@@ -58,6 +59,7 @@ $result = $statement->execute();
     <div class="p-3 mb-2 bg-light shadow-lg">
         <div><a class="fw-bold" href="course.php?cid=<?= $row['cid'] ?>"><?= $row['cname'] ?></a></div>
         <div class="mb-3"><?= $row['cdesc'] ?></div>
+        <div class="my-3"><a class="btn text-white" style="background-color:#003366" href="<?= $row['curl'] ?>">Launch</a></div>
 
         <?php if(!empty($row['ckeys'])): ?>
         <?php $keys = explode(',',$row['ckeys']) ?>

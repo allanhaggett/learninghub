@@ -124,32 +124,32 @@ else:
 <div class="col-md-5">
  
 <div class="p-3 mb-2 bg-light">
-<label class="fw-bold" for="coursestatus">Status</label>
-<select id="coursestatus" name="coursestatus" class="form-select d-inline" id="">
-    <option value="published">Published</option>
-    <option value="tbsheduled">To be scheduled</option>
-    <option value="private">Private</option>
-</select>
+    <label class="fw-bold" for="coursestatus">Status</label>
+    <select id="coursestatus" name="coursestatus" class="form-select d-inline" id="">
+        <option value="published">Published</option>
+        <option value="tbsheduled">To be scheduled</option>
+        <option value="private">Private</option>
+    </select>
 </div>
 <div class="p-3 mb-2 bg-light">
-<label class="fw-bold" for="coursename">Course Name</label>
-<input id="coursename" name="coursename" class="form-control form-control-lg" type="text" placeholder="Enter course name" required>
+    <label class="fw-bold" for="coursename">Course Name</label>
+    <input id="coursename" name="coursename" class="form-control form-control-lg" type="text" placeholder="Enter course name" required>
 </div>
 <div class="p-3 mb-2 bg-light">
-<label class="fw-bold" for="coursedesc">Course Description</label>
-<textarea id="coursedesc" name="coursedesc" class="form-control" required></textarea>
+    <label class="fw-bold" for="coursedesc">Course Description</label>
+    <textarea id="coursedesc" name="coursedesc" class="form-control" required></textarea>
 </div>
 <div class="p-3 mb-2 bg-light">
-<label class="fw-bold" for="courselink">Course Link</label>
-<input id="courselink" name="courselink" class="form-control" type="text" placeholder="https://..." required>
+    <label class="fw-bold" for="courselink">Course Link</label>
+    <input id="courselink" name="courselink" class="form-control" type="text" placeholder="https://..." required>
 </div>
 <div class="p-3 mb-2 bg-light">
-<label class="fw-bold" for="keywords">Keywords</label>
-<input id="keywords" name="keywords" class="form-control" type="text" placeholder="Comma separated values">
+    <label class="fw-bold" for="keywords">Keywords</label>
+    <input id="keywords" name="keywords" class="form-control" type="text" placeholder="Comma separated values">
 </div>
 <div class="p-3 mb-2 bg-light">
-<label class="fw-bold" for="courseexpire">Expiration date</label>
-<input id="courseexpire" name="courseexpire" class="form-control" type="date" placeholder="https://...">
+    <label class="fw-bold" for="courseexpire">Expiration date</label>
+    <input id="courseexpire" name="courseexpire" class="form-control" type="date" placeholder="https://...">
 </div>
 
 <button class="my-5 btn btn-lg d-block btn-primary">Add Course</button>
