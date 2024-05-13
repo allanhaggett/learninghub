@@ -2,12 +2,30 @@
 $db = new SQLite3('courses.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
 // Errors are emitted as warnings by default, enable proper error handling.
 $db->enableExceptions(true);
+
+$topsql = 'SELECT * FROM topics WHERE '; 
+// echo $lastkey; exit;
+if(!empty($_GET['topic'])) {
+    $lastkey = end($_GET['topic']);
+    foreach($_GET['topic'] as $tid) {
+        $topsql .= 'id = ' . $tid;
+        if($tid != $lastkey) {
+            $topsql .= ' OR ';
+        }
+    }
+    $topsql .= ';';
+    // echo $topsql; exit;
+    $topicinfo = $db->prepare($topsql);
+    $top = $topicinfo->execute();
+}
+
 ?>
+
 
 <!doctype html>
 <html>
 <head>
-<title>LearningHUB</title>
+<title> | LearningHUB</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
@@ -15,15 +33,84 @@ $db->enableExceptions(true);
 <div class="container">
 
 <div class="row">
+<div class="col-md-3">
+
+<h2>Audiences</h2>
+<p>Who is the learning for?</p>
+
+<?php
+$statement = $db->prepare('SELECT * FROM audiences;');
+$result = $statement->execute();
+?>
+    <div class="p-3 mb-2 bg-light shadow-lg">
+<?php while ($row = $result->fetchArray()): ?>
+        <div><a  href="filter.php?audience=<?= $row['slug'] ?>"><?= $row['name'] ?></a></div>
+        <?php endwhile ?>
+    </div>
+
+
+<h2>Groups</h2>
+<p>What type of learning is it?</p>
+
+<?php
+$statement = $db->prepare('SELECT * FROM groups;');
+$result = $statement->execute();
+?>
+    <div class="p-3 mb-2 bg-light shadow-lg">
+<?php while ($row = $result->fetchArray()): ?>
+        <div><a  href="filter.php?group=<?= $row['slug'] ?>"><?= $row['name'] ?></a></div>
+        <?php endwhile ?>
+    </div>
+
+
+
+<h2>Topics</h2>
+<p>What is the learning about?</p>
+
+<?php
+$statement = $db->prepare('SELECT * FROM topics;');
+$result = $statement->execute();
+?>
+    <div class="p-3 mb-2 bg-light shadow-lg">
+    <?php while ($row = $result->fetchArray()): ?>
+        <div><a  href="filter.php?topic[]=<?= $row['id'] ?>"><?= $row['name'] ?></a></div>
+    <?php endwhile ?>
+    </div>
+
+
+
+    <h2>Delivery Methods</h2>
+<p>How is the learning offered?</p>
+
+<?php
+$statement = $db->prepare('SELECT * FROM delivery_methods;');
+$result = $statement->execute();
+?>
+    <div class="p-3 mb-2 bg-light shadow-lg">
+<?php while ($row = $result->fetchArray()): ?>
+        <div><a  href="filter.php?delivery_method=<?= $row['slug'] ?>"><?= $row['name'] ?></a></div>
+        <?php endwhile ?>
+    </div>
+
+
+
+</div>
 <div class="col-md-6">
 
-<div class="mb-3"><a href="course-add.php" class="btn btn-primary">Add Course</a></div>
-
+<div class="p-3 mb-2 bg-light shadow-lg">
+<div class="fw-bold">Filters:</div>
+<?php if(!empty($_GET['topic'])): ?>
+<?php while ($row = $top->fetchArray()): ?>
+    <div><?= $row['name'] ?></div>
+<?php endwhile ?>
+<?php endif ?>
+</div>
 <?php
 
 $sql = 'SELECT 
             c.id AS cid, 
             c.name AS cname, 
+            c.url AS curl, 
             c.status AS cstatus, 
             c.description AS cdesc, 
             c.keywords AS ckeys, 
@@ -49,9 +136,18 @@ $sql = 'SELECT
         JOIN learning_platforms plat ON plat.id = c.platform_id
         WHERE 
             c.status = "published"
-        AND
-            c.topic_id = '.$_GET['topic'].';';
-
+        AND ';
+        if(!empty($_GET['s'])) {
+            $sql .= ' c.name LIKE "%' . $_GET['s'] . '%" AND ';
+        }
+        if(!empty($_GET['topic'])) {
+        foreach($_GET['topic'] as $tid) {
+            $sql .= 'c.topic_id = ' . $tid;
+            if($tid != $lastkey) $sql .= ' OR ';
+        }
+        }
+        $sql .= ';';
+// echo $sql; exit;
 $statement = $db->prepare($sql);
 $result = $statement->execute();
 ?>
@@ -60,8 +156,22 @@ $result = $statement->execute();
     <div class="p-3 mb-2 bg-light shadow-lg">
         <div><a class="fw-bold" href="course.php?cid=<?= $row['cid'] ?>"><?= $row['cname'] ?></a></div>
         <div class="mb-3"><?= $row['cdesc'] ?></div>
+
+        <div class="my-3">
+            <?php 
+// $parts = parse_url($url);
+// parse_str($parts['query'], $query);
+// echo $query['email'];
+            ?>
+            <a class="btn text-white" style="background-color:#003366" href="<?= $row['curl'] ?>">
+                Launch
+            </a>
+
+        </div>
+
         <?php if(!empty($row['ckeys'])): ?>
         <?php $keys = explode(',',$row['ckeys']) ?>
+        
         <div>
         Keywords: 
         <?php foreach($keys as $k): ?>
@@ -69,10 +179,11 @@ $result = $statement->execute();
         <?php endforeach ?>
         </div>
         <?php endif ?>
+
         <div>Delivery Method: <a href="filter.php?dmethod=<?= $row['dmid'] ?>"><?= $row['dmname'] ?></a></div>
         <div>Group: <a href="filter.php?group=<?= $row['groupid'] ?>"><?= $row['groupname'] ?></a></div>
         <div>Audience: <a href="filter.php?audience=<?= $row['audienceid'] ?>"><?= $row['audiencename'] ?></a></div>
-        <div>Topic: <a href="filter.php?topic=<?= $row['topicid'] ?>"><?= $row['topicname'] ?></a></div>
+        <div>Topic: <a href="filter.php?topic[]=<?= $row['topicid'] ?>"><?= $row['topicname'] ?></a></div>
         <div>Partner: <a href="filter.php?partner=<?= $row['partnerid'] ?>"><?= $row['partnername'] ?></a></div>
         <div>Platform: <a href="filter.php?platform=<?= $row['platformid'] ?>"><?= $row['platformname'] ?></a></div>
     </div>

@@ -89,7 +89,7 @@ $result = $statement->execute();
 ?>
 <?php while ($row = $result->fetchArray()): ?>
     <div class="p-3 mb-2 bg-light shadow-lg">
-        <div><a class="fw-bold" href="filter.php?topic=<?= $row['id'] ?>"><?= $row['name'] ?></a></div>
+        <div><a class="fw-bold" href="filter.php?topic[]=<?= $row['id'] ?>"><?= $row['name'] ?></a></div>
         <div><?= $row['description'] ?></div>
     </div>
 <?php endwhile ?>
