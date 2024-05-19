@@ -1,8 +1,19 @@
 <?php 
+/**
+ * LearningHUB 2.0
+ */
+
 $db = new SQLite3('courses.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
 // Errors are emitted as warnings by default, enable proper error handling.
 $db->enableExceptions(true);
 
+// Parse the URL as it's been passed and break it apart so we can 
+// build the URLs for filtering navigation
+$parts = parse_url($_SERVER['REQUEST_URI']);
+parse_str($parts['query'], $query);
+
+// What topic(s) are we filtering upon? There can be more than one topic
+// and we're using topic[]=1 parameter arrays 
 $topsql = 'SELECT * FROM topics WHERE '; 
 // echo $lastkey; exit;
 if(!empty($_GET['topic'])) {
@@ -66,14 +77,31 @@ $result = $statement->execute();
 
 <h2>Topics</h2>
 <p>What is the learning about?</p>
+<?php 
 
-<?php
+
+ 
 $statement = $db->prepare('SELECT * FROM topics;');
 $result = $statement->execute();
 ?>
     <div class="p-3 mb-2 bg-light shadow-lg">
     <?php while ($row = $result->fetchArray()): ?>
-        <div><a  href="filter.php?topic[]=<?= $row['id'] ?>"><?= $row['name'] ?></a></div>
+    <?php 
+    $urlquery = '';
+    foreach($query['topic'] as $t) {
+        if($t == $row['id']) { 
+            continue;
+        } else {
+            $urlquery .= '&topic[]=' . $row['id'];
+        }
+        // $urlquery .= '&topic[]=' . $t;
+    }
+    ?>
+    <div>
+        <a href="filter.php?<?= $urlquery ?>">
+            <?= $row['name'] ?>
+        </a>
+    </div>
     <?php endwhile ?>
     </div>
 
@@ -150,6 +178,8 @@ $sql = 'SELECT
 // echo $sql; exit;
 $statement = $db->prepare($sql);
 $result = $statement->execute();
+// $count = $statement->fetchColumn();
+// echo $count;
 ?>
 
 <?php while ($row = $result->fetchArray()): ?>
@@ -158,11 +188,7 @@ $result = $statement->execute();
         <div class="mb-3"><?= $row['cdesc'] ?></div>
 
         <div class="my-3">
-            <?php 
-// $parts = parse_url($url);
-// parse_str($parts['query'], $query);
-// echo $query['email'];
-            ?>
+
             <a class="btn text-white" style="background-color:#003366" href="<?= $row['curl'] ?>">
                 Launch
             </a>

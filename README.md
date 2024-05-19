@@ -2,8 +2,8 @@
 
 Nothing left to take away.
 
-No framework. Just SQLite and PDO via PHP. Only required functions implemented.
-
-Prepared statements and a simple RBAC.
-
-Bootstrap and Vanilla Javascript.
+- No framework. 
+- Just SQLite and PHP/PDO prepared statements as close to the output as possible.
+- Only reads/syncs with other sources. No private admin functions.
+- Only required functions implemented.
+- Bootstrap and Vanilla Javascript.

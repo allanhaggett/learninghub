@@ -25,6 +25,11 @@ $db->query('CREATE TABLE IF NOT EXISTS "learning_partners" (
 
 $statement = $db->prepare('INSERT INTO "learning_partners" ("created", "name", "slug", "description", "url") VALUES (:created, :name, :slug, :description, :url)');
 $statement->bindValue(':created', date('Y-m-d H:i:s'));
+$statement->bindValue(':name', 'Unassigned');
+$statement->bindValue(':slug', 'unassigned');
+$statement->bindValue(':description', 'This course does not have a partner assigned.');
+$statement->execute(); 
+$statement->bindValue(':created', date('Y-m-d H:i:s'));
 $statement->bindValue(':name', 'Learning Centre');
 $statement->bindValue(':slug', 'learning-centre');
 $statement->bindValue(':description', 'The Learning Centre works closely with partners across the BC public service to offer accessible, timely, and relevant learning resources for employees, supervisors, managers, and leaders. It serves the public servant’s diverse and dynamic learning needs, and helps employees achieve their personal career goals.');
@@ -168,6 +173,12 @@ $db->query('CREATE TABLE IF NOT EXISTS "learning_platforms" (
 
 $statement = $db->prepare('INSERT INTO "learning_platforms" ("created", "name", "slug", "description", "url") VALUES (:created, :name, :slug, :description, :url)');
 $statement->bindValue(':created', date('Y-m-d H:i:s'));
+$statement->bindValue(':name', 'Unassigned');
+$statement->bindValue(':slug', 'unassigned');
+$statement->bindValue(':description', 'No platform.');
+$statement->bindValue(':url', '');
+$statement->execute(); 
+$statement->bindValue(':created', date('Y-m-d H:i:s'));
 $statement->bindValue(':name', 'PSA Learning System');
 $statement->bindValue(':slug', 'psa-learning-system');
 $statement->bindValue(':description', 'AKA ELM');
@@ -188,10 +199,15 @@ $db->query('CREATE TABLE IF NOT EXISTS "delivery_methods" (
 )');
 $statement = $db->prepare('INSERT INTO "delivery_methods" ("created", "name", "slug",  "description") VALUES (:created, :name, :slug, :description)');
 $statement->bindValue(':created', date('Y-m-d H:i:s'));
+$statement->bindValue(':name', 'Unassigned');
+$statement->bindValue(':slug', 'unassigned');
+$statement->bindValue(':description', 'No delivery method assigned.');
+$statement->execute();
+$statement->bindValue(':created', date('Y-m-d H:i:s'));
 $statement->bindValue(':name', 'eLearning');
 $statement->bindValue(':slug', 'elearning');
 $statement->bindValue(':description', 'Broadly refers to all formal online learning. This includes live sessions and self-paced courses.');
-$statement->execute(); 
+$statement->execute();
 $statement->bindValue(':created', date('Y-m-d H:i:s'));
 $statement->bindValue(':name', 'Webinar');
 $statement->bindValue(':slug', 'webinar');
@@ -221,6 +237,11 @@ $db->query('CREATE TABLE IF NOT EXISTS "audiences" (
     "color" VARCHAR
 )');
 $statement = $db->prepare('INSERT INTO "audiences" ("created", "name", "slug",  "description") VALUES (:created, :name, :slug, :description)');
+$statement->bindValue(':created', date('Y-m-d H:i:s'));
+$statement->bindValue(':name', 'Unassigned');
+$statement->bindValue(':slug', 'unassigned');
+$statement->bindValue(':description', 'No audience assigned.');
+$statement->execute(); 
 $statement->bindValue(':created', date('Y-m-d H:i:s'));
 $statement->bindValue(':name', 'All Employees');
 $statement->bindValue(':slug', 'all-employees');
@@ -255,6 +276,11 @@ $db->query('CREATE TABLE IF NOT EXISTS "topics" (
     "color" VARCHAR
 )');
 $statement = $db->prepare('INSERT INTO "topics" ("created", "name", "slug", "description") VALUES (:created, :name, :slug, :description)');
+$statement->bindValue(':created', date('Y-m-d H:i:s'));
+$statement->bindValue(':name', 'Unassigned');
+$statement->bindValue(':slug', 'Unassigned');
+$statement->bindValue(':description', 'No topic assigned.');
+$statement->execute(); 
 $statement->bindValue(':created', date('Y-m-d H:i:s'));
 $statement->bindValue(':name', 'Being a Public Service Employee');
 $statement->bindValue(':slug', 'being-public-service-employee');
@@ -345,6 +371,11 @@ $db->query('CREATE TABLE IF NOT EXISTS "groups" (
 )');
 $statement = $db->prepare('INSERT INTO "groups" ("created", "name", "slug", "description") VALUES (:created, :name, :slug, :description)');
 $statement->bindValue(':created', date('Y-m-d H:i:s'));
+$statement->bindValue(':name', 'Unassigned');
+$statement->bindValue(':slug', 'unassigned');
+$statement->bindValue(':description', 'No group assigned.');
+$statement->execute(); 
+$statement->bindValue(':created', date('Y-m-d H:i:s'));
 $statement->bindValue(':name', 'Mandatory');
 $statement->bindValue(':slug', 'mandatory');
 $statement->bindValue(':description', 'Required by policy or regulations. Most require periodic renewal.');
@@ -364,7 +395,7 @@ $statement->execute();
 // Create courses table.
 $db->query('CREATE TABLE IF NOT EXISTS "courses" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    "status" INTEGER NOT NULL,
+    "status" VARCHAR NOT NULL,
     "sortorder" INTEGER,
     "name" VARCHAR NOT NULL,
     "slug" VARCHAR,
