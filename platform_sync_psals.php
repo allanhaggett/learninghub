@@ -5,7 +5,10 @@
  * Platform Sync for PSA Learning System
  * https://learning.gov.bc.ca/CHIPSPLM/signon.html
  * 
- * PSA Learning System is 
+ * PSA Learning System (PSALS) is the primary registration portal for Corporate 
+ * Learning in the BC Public Service. It's not the only platform in use,
+ * but it is the most widely used. PSALS also acts as BC Gov employees'
+ * official training record.
  * 
  * Learners should not ever be faced with the dilema of searching the 
  * catalog, finding a course they want to take and following the link to it,
@@ -52,6 +55,12 @@ foreach($feed->items as $feedcourse) {
     }
 }
 
+?>
+
+<h1>PSA Learning System Sync</h1>
+
+<?php
+
 // Now we can loop through each of the exisiting published courses
 // and check each against the feedindex array.
 //
@@ -95,7 +104,7 @@ $sql = 'SELECT
             plat.name AS platformname,
             plat.id AS platformid
         FROM 
-            courses c 
+            courses c
         JOIN delivery_methods dm ON dm.id = c.dmethod_id
         JOIN groups g ON g.id = c.group_id
         JOIN audiences a ON a.id = c.audience_id
@@ -104,9 +113,17 @@ $sql = 'SELECT
         JOIN learning_platforms plat ON plat.id = c.platform_id
         WHERE 
             c.platform_id = 2;';
-            
+
 $statement = $db->prepare($sql);
 $result = $statement->execute();
+
+// $countsql = "SELECT count(*) FROM courses;";
+// $statement = $db->prepare($countsql);
+// $coursecount = $statement->execute();
+// print_r($coursecount); exit;
+// Also how many courses are we talking about?
+// $nRows = $db->query('select count(*) from blah')->fetchColumn(); 
+// echo $nRows; exit;
 
 //
 // Create the array to array_push the existing course titles into
@@ -137,9 +154,7 @@ while ($row = $result->fetchArray()):
         // so that we can not touch the database if we don't need to.
         $courseupdated = 0;
 
-        // Compare throughly for any updates.
-        // If everything is the same then we're not actually touching the 
-        // database at all in this process.
+        // status
         if($row['cstatus'] != 'published') {
             $row['cstatus'] = 'published';
             $courseupdated = 1;
@@ -148,6 +163,12 @@ while ($row = $result->fetchArray()):
         // name
         if($feedcourse->title != $row['cname']) {
             $row['cname'] = $feedcourse->title;
+            $newslug = strtolower(
+                trim(
+                    preg_replace('/[^A-Za-z0-9-]+/', '-', $feedcourse->title)
+                )
+            );
+            $row['slug'] = $newslug;
             $courseupdated = 1;
         }
         
@@ -268,7 +289,7 @@ while ($row = $result->fetchArray()):
 
     }
 endwhile;
-// echo '<pre>';print_r($courseindex); exit;
+
 //
 // Next, let's loop through the feed again, this time looking at the newly created
 // $courseindex array with just the published course IDs in it for easy lookup
