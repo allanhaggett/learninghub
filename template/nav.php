@@ -1,4 +1,4 @@
-<nav style="background-color: #003366;" class="navbar navbar-expand-lg px-3 mb-5" data-bs-theme="dark" role="navigation" aria-label="Primary menu">
+<nav class="navbar bg-dark-subtle sticky-top navbar-expand-lg px-3 mb-5" data-bs-theme="dark" role="navigation" aria-label="Primary menu">
 <div class="container-fluid">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon text-white"></span>
@@ -43,12 +43,18 @@
             </li>
         </ul>
     </div>
-    <form method="get" action="" class="collapse navbar-collapse mt-1 mt-lg-0" role="search" id="navbarSearch">
+    <form method="get" action="/filter.php" class="collapse navbar-collapse mt-1 mt-lg-0" role="search" id="navbarSearch">
         <label for="s" class="sr-only">Search</label>
-        <input type="search" id="s" class="s bg-white flex-grow-1 flex-shrink-1 me-1" name="s" placeholder="Find learning" required value="">
+        <input type="search" 
+                id="s" 
+                class="s bg-light-subtle flex-grow-1 flex-shrink-1 me-1" 
+                name="s" 
+                placeholder="Find learning" 
+                required 
+                value="<?php if(!empty($_GET['s'])) echo htmlspecialchars($_GET['s']) ?>">
         <button type="submit" class="searchsubmit" aria-label="Submit Search">
-                                Search
-                            </button>
+            Search
+        </button>
     </form>
 </div>
 </nav>

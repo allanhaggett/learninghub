@@ -31,14 +31,9 @@ if(!empty($_GET['topic'])) {
 }
 
 ?>
-<!doctype html>
-<html>
-<head>
-<title> | LearningHUB</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-</head>
-<body>
+<?php require('template/header.php') ?>
 <?php require('template/nav.php') ?>
+
 <div class="container">
 
 <div class="row">
@@ -51,7 +46,7 @@ if(!empty($_GET['topic'])) {
 $statement = $db->prepare('SELECT * FROM audiences;');
 $result = $statement->execute();
 ?>
-    <div class="p-3 mb-2 bg-light shadow-lg">
+    <div class="p-3 mb-2 bg-light-subtle rounded-3">
 <?php while ($row = $result->fetchArray()): ?>
         <div><a  href="filter.php?audience=<?= $row['slug'] ?>"><?= $row['name'] ?></a></div>
         <?php endwhile ?>
@@ -65,7 +60,7 @@ $result = $statement->execute();
 $statement = $db->prepare('SELECT * FROM groups;');
 $result = $statement->execute();
 ?>
-    <div class="p-3 mb-2 bg-light shadow-lg">
+    <div class="p-3 mb-2 bg-light-subtle rounded-3">
 <?php while ($row = $result->fetchArray()): ?>
         <div><a  href="filter.php?group=<?= $row['slug'] ?>"><?= $row['name'] ?></a></div>
         <?php endwhile ?>
@@ -79,17 +74,21 @@ $result = $statement->execute();
 $statement = $db->prepare('SELECT * FROM topics;');
 $result = $statement->execute();
 ?>
-    <div class="p-3 mb-2 bg-light shadow-lg">
+    <div class="p-3 mb-2 bg-light-subtle rounded-3">
     <?php while ($row = $result->fetchArray()): ?>
     <?php 
-    $urlquery = '';
-    foreach($query['topic'] as $t) {
-        if($t == $row['id']) { 
-            continue;
-        } else {
-            $urlquery .= '&topic[]=' . $row['id'];
+    if(!empty($query['topic'])) {
+        $urlquery = '';
+        foreach($query['topic'] as $t) {
+            if($t == $row['id']) { 
+                continue;
+            } else {
+                $urlquery .= '&topic[]=' . $row['id'];
+            }
+            // $urlquery .= '&topic[]=' . $t;
         }
-        // $urlquery .= '&topic[]=' . $t;
+    } else {
+        $urlquery .= '&topic[]=' . $row['id'];
     }
     ?>
     <div>
@@ -107,7 +106,7 @@ $result = $statement->execute();
 $statement = $db->prepare('SELECT * FROM delivery_methods;');
 $result = $statement->execute();
 ?>
-<div class="p-3 mb-2 bg-light shadow-lg">
+<div class="p-3 mb-2 bg-light-subtle rounded-3">
 <?php while ($row = $result->fetchArray()): ?>
     <div><a  href="filter.php?delivery_method=<?= $row['slug'] ?>"><?= $row['name'] ?></a></div>
 <?php endwhile ?>
@@ -118,7 +117,7 @@ $result = $statement->execute();
 </div>
 <div class="col-md-6">
 
-<div class="p-3 mb-2 bg-light shadow-lg">
+<div class="p-3 mb-2 bg-light-subtle rounded-3">
 <div class="fw-bold">Filters:</div>
 <?php if(!empty($_GET['topic'])): ?>
 <?php while ($row = $top->fetchArray()): ?>
@@ -159,7 +158,8 @@ $sql = 'SELECT
             c.status = "published"
         AND ';
         if(!empty($_GET['s'])) {
-            $sql .= ' c.name LIKE "%' . $_GET['s'] . '%" AND ';
+            $sql .= ' c.name LIKE "%' . $_GET['s'] . '%" OR';
+            $sql .= ' c.description LIKE "%' . $_GET['s'] . '%"';
         }
         if(!empty($_GET['topic'])) {
         foreach($_GET['topic'] as $tid) {
@@ -175,11 +175,11 @@ $result = $statement->execute();
 ?>
 
 <?php while ($row = $result->fetchArray()): ?>
-    <div class="p-3 mb-2 bg-light shadow-lg">
-        <div><a class="fw-bold" href="course.php?cid=<?= $row['cid'] ?>"><?= $row['cname'] ?></a></div>
+    <div class="p-3 mb-2 bg-light-subtle rounded-3">
+        <h2 class="fs-4"><a href="course.php?cid=<?= $row['cid'] ?>"><?= $row['cname'] ?></a></h2>
         <div class="mb-3"><?= $row['cdesc'] ?></div>
         <div class="my-3">
-            <a class="btn btn-lg btn-outline-primary" href="<?= $row['curl'] ?>">
+            <a class="btn btn-lg text-white" style="background-color: #003366;" href="<?= $row['curl'] ?>">
                 Launch
             </a>
         </div>

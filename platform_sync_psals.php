@@ -37,8 +37,8 @@ $db->enableExceptions(true);
 // Which takes two separate ELM queries and merges the output into this
 // JSON feed.
 // Get the feed.
-// $url = 'https://learn.bcpublicservice.gov.bc.ca/learning-hub/learning-partner-courses.json';
-$url = 'platforms/psa-learning-system.json';
+$url = 'https://learn.bcpublicservice.gov.bc.ca/learning-hub/learning-partner-courses.json';
+// $url = 'platforms/psa-learning-system.json';
 $f = file_get_contents($url);
 $feed = json_decode($f);
 
@@ -80,6 +80,7 @@ $sql = 'SELECT
             c.id AS cid, 
             c.name AS cname, 
             c.slug AS cslug, 
+            c.created AS ccreated, 
             c.status AS cstatus, 
             c.description AS cdesc, 
             c.course_id AS courseid, 
@@ -106,7 +107,9 @@ $sql = 'SELECT
         JOIN learning_partners pa ON pa.id = c.partner_id
         JOIN learning_platforms plat ON plat.id = c.platform_id
         WHERE 
-            c.platform_id = 2;';
+            c.platform_id = 2
+        ORDER BY
+            c.created DESC;';
 
 $statement = $db->prepare($sql);
 $result = $statement->execute();
@@ -258,12 +261,12 @@ while ($row = $result->fetchArray()):
             $statement->bindValue(':courseid', $row['cid']);
             $statement->execute();
 
-            array_push($updatedcourses,$row['cname']);
+            array_push($updatedcourses,[$row['cid'],$row['cname']]);
             // echo $count . '. ' . $row['cname'] . ' UPDATED!<br>';
             
         } else { // there are no updates so just say so.
             
-            array_push($nochangecourses,$row['cname']);
+            array_push($nochangecourses,[$row['cid'],$row['cname']]);
             // echo $count . '. ' . $row['cname'] . ' - ' . $row['courseid'] . ' - NO CHANGE.<br>';
         }
         $count++;
@@ -282,12 +285,12 @@ while ($row = $result->fetchArray()):
             $statement->bindValue(':id',$row['cid']);
             $statement->execute();
 
-            array_push($newlyprivatecourses,$row['cname']);
+            array_push($newlyprivatecourses,[$row['cid'],$row['cname']]);
             // echo $row['cname'] . ' - ' . $row['cid'] . ' - REMOVED!<br>';
 
         } else {
 
-            array_push($privatecourses, $row['cname']);
+            array_push($privatecourses,[$row['cid'],$row['cname']]);
             // echo $row['cname'] . ' - ' . $row['cid'] . ' - PRIVATE.<br>';
         }
 
@@ -415,11 +418,10 @@ foreach($feed->items as $feedcourse) {
 
             if($statement->execute()) {
 
-                array_push($row['cname'],$newlyaddedcourses);
-                echo $count . '. ' . ' ' . $name . ' created.<br>';
-                $count++;
+                array_push($newlyaddedcourses,[$name]);
 
             } else {
+                
                 var_dump($statement->errorInfo());
             }
         } // feed id not in course index
@@ -540,41 +542,44 @@ function map_audience_to_id ($audience) {
     return $aid;
 }
 ?>
-<!doctype html>
-<html>
-<head>
-<title>LearningHUB</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-</head>
-<body>
+
+<?php require('template/header.php') ?>
 <?php require('template/nav.php') ?>
+
 <div class="container">
-<h1>PSA Learning System Sync</h1>
+<h1 class="mb-4">PSA Learning System Sync</h1>
+<div>
+    <a href="https://learn.bcpublicservice.gov.bc.ca/learning-hub/learning-partner-courses.json"
+        target="_blank">
+            https://learn.bcpublicservice.gov.bc.ca/learning-hub/learning-partner-courses.json
+    </a>
+</div>
+<hr class="mb-4">
 <div class="row">
 <div class="col-md-6">
-<div><?= count($updatedcourses) ?> Updated courses: </div>
+<div><?= count($updatedcourses) ?> Updated courses </div>
 <ol>
 <?php foreach($updatedcourses as $uc): ?>
-    <li><?= $uc ?></li>
+    <li><a href="course.php?cid=<?= $uc[0] ?>"><?= $uc[1] ?></a></li>
 <?php endforeach ?>
 </ol>
 
-<div>Newly private courses:</div>
+<div><?= count($newlyprivatecourses) ?> Newly private courses</div>
 <ol>
 <?php foreach($newlyprivatecourses as $npc): ?>
-    <li><?= $npc ?></li>
+    <li><a href="course.php?cid=<?= $npc[0] ?>"><?= $npc[1] ?></a></li>
 <?php endforeach ?>
 </ol>
-<div>Newly added courses</div>
+<div><?= count($newlyaddedcourses) ?> Newly added courses</div>
 <ol>
 <?php foreach($newlyaddedcourses as $nac): ?>
-    <li><?= $nac ?></li>
+    <li><a href="course.php?cid=<?= $nac[0] ?>"><?= $nac[0] ?></a></li>
 <?php endforeach ?>
 </ol>
-<div><?= count($privatecourses) ?> Private courses: </div>
+<div><?= count($privatecourses) ?> Private courses </div>
 <ol>
 <?php foreach($privatecourses as $pc): ?>
-    <li><?= $pc ?></li>
+    <li><a href="course.php?cid=<?= $pc[0] ?>"><?= $pc[1] ?></a></li>
 <?php endforeach ?>
 </ol>
 
@@ -584,7 +589,7 @@ function map_audience_to_id ($audience) {
 <div><?= count($nochangecourses) ?> No change courses</div>
 <ol>
 <?php foreach($nochangecourses as $ncc): ?>
-    <li><?= $ncc ?></li>
+    <li><a href="course.php?cid=<?= $ncc[0] ?>"><?= $ncc[1] ?></a></li>
 <?php endforeach ?>
 </ol>
 

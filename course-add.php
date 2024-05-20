@@ -123,7 +123,7 @@ else:
 <div class="row">
 <div class="col-md-5">
  
-<div class="p-3 mb-2 bg-light">
+<div class="p-3 mb-2 bg-light-subtle">
     <label class="fw-bold" for="coursestatus">Status</label>
     <select id="coursestatus" name="coursestatus" class="form-select d-inline" id="">
         <option value="published">Published</option>
@@ -131,23 +131,23 @@ else:
         <option value="private">Private</option>
     </select>
 </div>
-<div class="p-3 mb-2 bg-light">
+<div class="p-3 mb-2 bg-light-subtle">
     <label class="fw-bold" for="coursename">Course Name</label>
     <input id="coursename" name="coursename" class="form-control form-control-lg" type="text" placeholder="Enter course name" required>
 </div>
-<div class="p-3 mb-2 bg-light">
+<div class="p-3 mb-2 bg-light-subtle">
     <label class="fw-bold" for="coursedesc">Course Description</label>
     <textarea id="coursedesc" name="coursedesc" class="form-control" required></textarea>
 </div>
-<div class="p-3 mb-2 bg-light">
+<div class="p-3 mb-2 bg-light-subtle">
     <label class="fw-bold" for="courselink">Course Link</label>
     <input id="courselink" name="courselink" class="form-control" type="text" placeholder="https://..." required>
 </div>
-<div class="p-3 mb-2 bg-light">
+<div class="p-3 mb-2 bg-light-subtle">
     <label class="fw-bold" for="keywords">Keywords</label>
     <input id="keywords" name="keywords" class="form-control" type="text" placeholder="Comma separated values">
 </div>
-<div class="p-3 mb-2 bg-light">
+<div class="p-3 mb-2 bg-light-subtle">
     <label class="fw-bold" for="courseexpire">Expiration date</label>
     <input id="courseexpire" name="courseexpire" class="form-control" type="date" placeholder="https://...">
 </div>
@@ -161,7 +161,7 @@ else:
 <div class="row">
 <div class="col-md-6">
 
-<div class="p-3 mb-2 bg-light">
+<div class="p-3 mb-2 bg-light-subtle">
 <label class="fw-bold" for="audience_id">Audience</label>
 <p>Who is the learning for?</p>
 <?php
@@ -175,7 +175,7 @@ $result = $statement->execute();
 </select>
 
 </div>
-<div class="p-3 mb-2 bg-light">
+<div class="p-3 mb-2 bg-light-subtle">
 
 <label class="fw-bold" for="groupselect">Group</label>
 <p>What type of learning is it?</p>
@@ -192,7 +192,7 @@ $result = $statement->execute();
 
 
 </div>
-<div class="p-3 mb-2 bg-light">
+<div class="p-3 mb-2 bg-light-subtle">
 
 <label class="fw-bold" for="dmethod_id">Delivery Method</label>
 <p>How is the learning offered?</p>
@@ -212,7 +212,7 @@ $result = $statement->execute();
 </div>
 <div class="col-md-6">
 
-<div class="p-3 mb-2 bg-light">
+<div class="p-3 mb-2 bg-light-subtle">
 
 <label class="fw-bold" for="partner_id">Learning Partner</label>
 <p>Who is offering the learning?</p>
@@ -229,7 +229,7 @@ $result = $statement->execute();
 
 
 </div>
-<div class="p-3 mb-2 bg-light">
+<div class="p-3 mb-2 bg-light-subtle">
 
 <label class="fw-bold" for="topic_id">Topic</label>
 <p>What is the learning about?</p>
@@ -246,7 +246,7 @@ $result = $statement->execute();
 
 
 </div>
-<div class="p-3 mb-2 bg-light">
+<div class="p-3 mb-2 bg-light-subtle">
 
 
 <label class="fw-bold" for="platform_id">Platform</label>

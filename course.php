@@ -4,14 +4,8 @@ $db = new SQLite3('courses.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE
 $db->enableExceptions(true);
 ?>
 
-<!doctype html>
-<html>
-<head>
-<title>LearningHUB</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-</head>
-<body>
 
+<?php require('template/header.php') ?>
 <?php require('template/nav.php') ?>
 
 <div class="container">
@@ -55,7 +49,7 @@ $statement = $db->prepare($sql);
 $result = $statement->execute();
 ?>
 <?php while ($row = $result->fetchArray()): ?>
-    <div class="p-3 mb-2 bg-light shadow-lg">
+    <div class="p-3 mb-2 bg-light-subtle shadow-lg">
         <div><?= strtoupper($row['cstatus']) ?></div>
         <h1><?= $row['cname'] ?></h1>
         <div class="mb-3"><?= $row['cdesc'] ?></div>
