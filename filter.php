@@ -31,8 +31,6 @@ if(!empty($_GET['topic'])) {
 }
 
 ?>
-
-
 <!doctype html>
 <html>
 <head>
@@ -78,9 +76,6 @@ $result = $statement->execute();
 <h2>Topics</h2>
 <p>What is the learning about?</p>
 <?php 
-
-
- 
 $statement = $db->prepare('SELECT * FROM topics;');
 $result = $statement->execute();
 ?>
@@ -105,20 +100,18 @@ $result = $statement->execute();
     <?php endwhile ?>
     </div>
 
-
-
-    <h2>Delivery Methods</h2>
+<h2>Delivery Methods</h2>
 <p>How is the learning offered?</p>
 
 <?php
 $statement = $db->prepare('SELECT * FROM delivery_methods;');
 $result = $statement->execute();
 ?>
-    <div class="p-3 mb-2 bg-light shadow-lg">
+<div class="p-3 mb-2 bg-light shadow-lg">
 <?php while ($row = $result->fetchArray()): ?>
-        <div><a  href="filter.php?delivery_method=<?= $row['slug'] ?>"><?= $row['name'] ?></a></div>
-        <?php endwhile ?>
-    </div>
+    <div><a  href="filter.php?delivery_method=<?= $row['slug'] ?>"><?= $row['name'] ?></a></div>
+<?php endwhile ?>
+</div>
 
 
 
@@ -175,11 +168,10 @@ $sql = 'SELECT
         }
         }
         $sql .= ';';
-// echo $sql; exit;
+
 $statement = $db->prepare($sql);
 $result = $statement->execute();
-// $count = $statement->fetchColumn();
-// echo $count;
+
 ?>
 
 <?php while ($row = $result->fetchArray()): ?>
