@@ -55,12 +55,6 @@ foreach($feed->items as $feedcourse) {
     }
 }
 
-?>
-
-<h1>PSA Learning System Sync</h1>
-
-<?php
-
 // Now we can loop through each of the exisiting published courses
 // and check each against the feedindex array.
 //
@@ -264,12 +258,12 @@ while ($row = $result->fetchArray()):
             $statement->bindValue(':courseid', $row['cid']);
             $statement->execute();
 
-            array_push($row['cname'],$updatedcourses);
+            array_push($updatedcourses,$row['cname']);
             // echo $count . '. ' . $row['cname'] . ' UPDATED!<br>';
             
         } else { // there are no updates so just say so.
             
-            array_push($row['cname'],$nochangecourses);
+            array_push($nochangecourses,$row['cname']);
             // echo $count . '. ' . $row['cname'] . ' - ' . $row['courseid'] . ' - NO CHANGE.<br>';
         }
         $count++;
@@ -288,12 +282,12 @@ while ($row = $result->fetchArray()):
             $statement->bindValue(':id',$row['cid']);
             $statement->execute();
 
-            array_push($row['cname'],$newlyprivatecourses);
+            array_push($newlyprivatecourses,$row['cname']);
             // echo $row['cname'] . ' - ' . $row['cid'] . ' - REMOVED!<br>';
 
         } else {
 
-            array_push($row['cname'],$privatecourses);
+            array_push($privatecourses, $row['cname']);
             // echo $row['cname'] . ' - ' . $row['cid'] . ' - PRIVATE.<br>';
         }
 
@@ -545,9 +539,57 @@ function map_audience_to_id ($audience) {
     }
     return $aid;
 }
-echo '<pre>';
-echo 'Updated courses: <br>'; print_r($updatedcourses);
-echo 'Private courses: <br>'; print_r($privatecourses);
-echo 'Newly private courses: <br>'; print_r($newlyprivatecourses);
-echo 'Newly added courses<br>'; print_r($newlyaddedcourses);
-echo 'No change courses<br>'; print_r($nochangecourses);
+?>
+<!doctype html>
+<html>
+<head>
+<title>LearningHUB</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+<?php require('template/nav.php') ?>
+<div class="container">
+<h1>PSA Learning System Sync</h1>
+<div class="row">
+<div class="col-md-6">
+<div><?= count($updatedcourses) ?> Updated courses: </div>
+<ol>
+<?php foreach($updatedcourses as $uc): ?>
+    <li><?= $uc ?></li>
+<?php endforeach ?>
+</ol>
+
+<div>Newly private courses:</div>
+<ol>
+<?php foreach($newlyprivatecourses as $npc): ?>
+    <li><?= $npc ?></li>
+<?php endforeach ?>
+</ol>
+<div>Newly added courses</div>
+<ol>
+<?php foreach($newlyaddedcourses as $nac): ?>
+    <li><?= $nac ?></li>
+<?php endforeach ?>
+</ol>
+<div><?= count($privatecourses) ?> Private courses: </div>
+<ol>
+<?php foreach($privatecourses as $pc): ?>
+    <li><?= $pc ?></li>
+<?php endforeach ?>
+</ol>
+
+</div>
+<div class="col-md-6">
+
+<div><?= count($nochangecourses) ?> No change courses</div>
+<ol>
+<?php foreach($nochangecourses as $ncc): ?>
+    <li><?= $ncc ?></li>
+<?php endforeach ?>
+</ol>
+
+</div>
+</div>
+</div>
+</body>
+</html>
