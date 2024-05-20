@@ -128,6 +128,11 @@ $result = $statement->execute();
 //
 // Create the array to array_push the existing course titles into
 $courseindex = [];
+// Create several other arrays to hold courses of various statues
+$updatedcourses = [];
+$privatecourses = [];
+$newlyprivatecourses = [];
+$nochangecourses = [];
 // Loop though all the PSALS courses in the system.
 // echo '<pre>';print_r($result->fetchArray()); exit;
 $count = 1;
@@ -168,7 +173,7 @@ while ($row = $result->fetchArray()):
                     preg_replace('/[^A-Za-z0-9-]+/', '-', $feedcourse->title)
                 )
             );
-            $row['slug'] = $newslug;
+            $row['cslug'] = $newslug;
             $courseupdated = 1;
         }
         
@@ -259,11 +264,13 @@ while ($row = $result->fetchArray()):
             $statement->bindValue(':courseid', $row['cid']);
             $statement->execute();
 
-            echo $count . '. ' . $row['cname'] . ' UPDATED!<br>';
-
+            array_push($row['cname'],$updatedcourses);
+            // echo $count . '. ' . $row['cname'] . ' UPDATED!<br>';
+            
         } else { // there are no updates so just say so.
-
-            echo $count . '. ' . $row['cname'] . ' - ' . $row['courseid'] . ' - NO CHANGE.<br>';
+            
+            array_push($row['cname'],$nochangecourses);
+            // echo $count . '. ' . $row['cname'] . ' - ' . $row['courseid'] . ' - NO CHANGE.<br>';
         }
         $count++;
 
@@ -273,6 +280,7 @@ while ($row = $result->fetchArray()):
         // This course is not in the feed anymore.
         // Make it private if it isn't already.
         if($row['cstatus'] != 'private') {
+
             $sql = 'UPDATE courses SET status = :status WHERE id = :id;';
             $statement = $db->prepare($sql);
             $stat = 'private';
@@ -280,11 +288,13 @@ while ($row = $result->fetchArray()):
             $statement->bindValue(':id',$row['cid']);
             $statement->execute();
 
-            echo $row['cname'] . ' - ' . $row['cid'] . ' - REMOVED!<br>';
+            array_push($row['cname'],$newlyprivatecourses);
+            // echo $row['cname'] . ' - ' . $row['cid'] . ' - REMOVED!<br>';
 
         } else {
-            
-            echo $row['cname'] . ' - ' . $row['cid'] . ' - PRIVATE.<br>';
+
+            array_push($row['cname'],$privatecourses);
+            // echo $row['cname'] . ' - ' . $row['cid'] . ' - PRIVATE.<br>';
         }
 
     }
@@ -297,6 +307,7 @@ endwhile;
 // If the course doesn't exist within the catalog yet, then we create it!
 //
 $count = 1;
+$newlyaddedcourses = [];
 foreach($feed->items as $feedcourse) {
     if(!empty($feedcourse->_course_id)) {
         if(!in_array($feedcourse->_course_id, $courseindex) && !empty($feedcourse->title)) {
@@ -409,17 +420,17 @@ foreach($feed->items as $feedcourse) {
             $statement->bindValue(':topic_id', $topic_id, PDO::PARAM_INT);
 
             if($statement->execute()) {
-                //$iid = $db->lastInsertId();
+
+                array_push($row['cname'],$newlyaddedcourses);
                 echo $count . '. ' . ' ' . $name . ' created.<br>';
                 $count++;
+
             } else {
                 var_dump($statement->errorInfo());
             }
-            
-
-        }
-    }
-}
+        } // feed id not in course index
+    } // feed id exists
+} // end foreach feed items
 
 
 function map_topic_to_id ($topic) {
@@ -534,3 +545,9 @@ function map_audience_to_id ($audience) {
     }
     return $aid;
 }
+echo '<pre>';
+echo 'Updated courses: <br>'; print_r($updatedcourses);
+echo 'Private courses: <br>'; print_r($privatecourses);
+echo 'Newly private courses: <br>'; print_r($newlyprivatecourses);
+echo 'Newly added courses<br>'; print_r($newlyaddedcourses);
+echo 'No change courses<br>'; print_r($nochangecourses);
