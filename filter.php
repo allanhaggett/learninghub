@@ -186,38 +186,28 @@ $result = $statement->execute();
     <div class="p-3 mb-2 bg-light shadow-lg">
         <div><a class="fw-bold" href="course.php?cid=<?= $row['cid'] ?>"><?= $row['cname'] ?></a></div>
         <div class="mb-3"><?= $row['cdesc'] ?></div>
-
         <div class="my-3">
-
-            <a class="btn text-white" style="background-color:#003366" href="<?= $row['curl'] ?>">
+            <a class="btn btn-lg btn-outline-primary" href="<?= $row['curl'] ?>">
                 Launch
             </a>
-
         </div>
-
-        <?php if(!empty($row['ckeys'])): ?>
-        <?php $keys = explode(',',$row['ckeys']) ?>
-        
-        <div>
-        Keywords: 
-        <?php foreach($keys as $k): ?>
-        <a href="keyword.php?keyword=<?= $k ?>"><?= $k ?></a>, 
-        <?php endforeach ?>
-        </div>
-        <?php endif ?>
-
         <div>Delivery Method: <a href="filter.php?dmethod=<?= $row['dmid'] ?>"><?= $row['dmname'] ?></a></div>
         <div>Group: <a href="filter.php?group=<?= $row['groupid'] ?>"><?= $row['groupname'] ?></a></div>
         <div>Audience: <a href="filter.php?audience=<?= $row['audienceid'] ?>"><?= $row['audiencename'] ?></a></div>
         <div>Topic: <a href="filter.php?topic[]=<?= $row['topicid'] ?>"><?= $row['topicname'] ?></a></div>
         <div>Partner: <a href="filter.php?partner=<?= $row['partnerid'] ?>"><?= $row['partnername'] ?></a></div>
         <div>Platform: <a href="filter.php?platform=<?= $row['platformid'] ?>"><?= $row['platformname'] ?></a></div>
+        <?php if(!empty($row['ckeys'])): ?>
+        <?php $keys = explode(',',$row['ckeys']) ?>
+        <details>
+            <summary>Keywords</summary>
+            <?php foreach($keys as $k): ?>
+            <a href="keyword.php?keyword=<?= $k ?>"><?= $k ?></a>, 
+            <?php endforeach ?>
+        </details>
+        <?php endif ?>
     </div>
 <?php endwhile ?>
-
-
-  
-
 </div>
 </div>
 </div>
