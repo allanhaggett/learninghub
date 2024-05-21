@@ -179,7 +179,7 @@ $result = $statement->execute();
         <h2 class="fs-4"><a href="course.php?cid=<?= $row['cid'] ?>"><?= $row['cname'] ?></a></h2>
         <div class="mb-3"><?= $row['cdesc'] ?></div>
         <div class="my-3">
-            <a class="btn btn-lg text-white" style="background-color: #003366;" href="<?= $row['curl'] ?>">
+            <a class="btn btn-lg bg-primary text-white" style="" href="<?= $row['curl'] ?>">
                 Launch
             </a>
         </div>
