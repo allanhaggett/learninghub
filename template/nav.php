@@ -41,20 +41,52 @@
             <li class="nav-item">
                 <a class="nav-link" href="courses.php">All Courses</a>
             </li>
+            
         </ul>
     </div>
     <form method="get" action="/filter.php" class="collapse navbar-collapse mt-1 mt-lg-0" role="search" id="navbarSearch">
-        <label for="s" class="sr-only">Search</label>
+        <label for="s" class="visually-hidden">Search</label>
         <input type="search" 
                 id="s" 
-                class="s bg-light-subtle flex-grow-1 flex-shrink-1 me-1" 
+                class="s p-1 bg-light-subtle flex-grow-1 flex-shrink-1 me-1 rounded-2 border-0" 
                 name="s" 
-                placeholder="Find learning" 
+                placeholder="Keyword search" 
                 required 
                 value="<?php if(!empty($_GET['s'])) echo htmlspecialchars($_GET['s']) ?>">
-        <button type="submit" class="searchsubmit" aria-label="Submit Search">
+        <button class="btn btn-sm btn-success" type="submit" class="searchsubmit" aria-label="Submit Search">
             Search
         </button>
     </form>
+    <ul class="navbar-nav mb-2 mb-lg-0 order-1 order-lg-2">
+    <li class="nav-item dropdown">
+            <button class="btn btn-link nav-link py-2 px-0 px-lg-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown" data-bs-display="static" aria-label="Toggle theme (dark)">
+              <svg width="16" height="16" class="bi my-1 theme-icon-active"><use href="#moon-stars-fill"></use></svg>
+              <span class="ms-2" id="bd-theme-text">Toggle theme</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme-text">
+              <li>
+                <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
+                  <svg width="16" height="16" class="bi me-2 opacity-50"><use href="#sun-fill"></use></svg>
+                  Light
+                  <svg width="16" height="16" class="bi ms-auto d-none"><use href="#check2"></use></svg>
+                </button>
+              </li>
+              <li>
+                <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="dark" aria-pressed="true">
+                  <svg width="16" height="16" class="bi me-2 opacity-50"><use href="#moon-stars-fill"></use></svg>
+                  Dark
+                  <svg width="16" height="16" class="bi ms-auto d-none"><use href="#check2"></use></svg>
+                </button>
+              </li>
+              <li>
+                <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto" aria-pressed="false">
+                  <svg width="16" height="16" class="bi me-2 opacity-50"><use href="#circle-half"></use></svg>
+                  Auto
+                  <svg width="16" height="16" class="bi ms-auto d-none"><use href="#check2"></use></svg>
+                </button>
+              </li>
+            </ul>
+        </li>
+    </ul>
 </div>
 </nav>

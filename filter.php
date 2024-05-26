@@ -179,8 +179,9 @@ $result = $statement->execute();
         <h2 class="fs-4"><a href="course.php?cid=<?= $row['cid'] ?>"><?= $row['cname'] ?></a></h2>
         <div class="mb-3"><?= $row['cdesc'] ?></div>
         <div class="my-3">
-            <a class="btn btn-lg bg-primary text-white" style="" href="<?= $row['curl'] ?>">
+            <a class="btn bg-primary text-white" style="" href="<?= $row['curl'] ?>">
                 Launch
+                <i class="bi bi-box-arrow-up-right"></i>
             </a>
         </div>
         <div>Delivery Method: <a href="filter.php?dmethod=<?= $row['dmid'] ?>"><?= $row['dmname'] ?></a></div>
@@ -203,5 +204,4 @@ $result = $statement->execute();
 </div>
 </div>
 </div>
-</body>
-</html>
+<?php require('template/footer.php') ?>
