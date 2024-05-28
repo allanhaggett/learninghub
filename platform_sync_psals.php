@@ -201,6 +201,12 @@ if($lasthash != $hash):
                 $courseupdated = 1;
             }
             
+            // description
+            if($feedcourse->summary != $row['descriptiom']) {
+                $row['descriptiom'] = $feedcourse->summary;
+                $courseupdated = 1;
+            }
+
             // URL
             if($feedcourse->url != $row['curl']) {
                 $row['curl'] = $feedcourse->url;
@@ -249,6 +255,14 @@ if($lasthash != $hash):
             }
 
             if($courseupdated == 1) {
+
+                $searchcombine = $row['cname'] . ' ';
+                $searchcombine .= $row['descriptiom'] . ' ';
+                $searchcombine .= $feedcourse->_topic . ' ';
+                $searchcombine .= $feedcourse->_learning_partner . ' ';
+                $searchcombine .= $feedcourse->delivery_method . ' ';
+                $searchcombine .= $feedcourse->_group . ' ';
+                $searchcombine .= $feedcourse->_audience . ' ';
                 
                 // Construct SQL query
                 $sql = "UPDATE courses SET
@@ -259,6 +273,7 @@ if($lasthash != $hash):
                                         modified = :modified,
                                         course_id = :course_id,
                                         url = :url,
+                                        search = :search,
                                         keywords = :keywords,
                                         partner_id = :partner_id,
                                         dmethod_id = :dmethod_id,
@@ -277,6 +292,7 @@ if($lasthash != $hash):
                 $statement->bindValue(':modified',date('Y-m-d H:i:s'));
                 $statement->bindValue(':course_id',$row['courseid']);
                 $statement->bindValue(':url',$row['curl']);
+                $statement->bindValue(':search',$row['search']);
                 $statement->bindValue(':keywords',$row['ckeys']);
                 $statement->bindValue(':partner_id',$row['partnerid']);
                 $statement->bindValue(':dmethod_id',$row['dmid']);
@@ -341,7 +357,7 @@ if($lasthash != $hash):
                                 preg_replace('/[^A-Za-z0-9-]+/', '-', $feedcourse->title)
                             )
                         );
-                $description = $feedcourse->summary; // required
+                $description = trim($feedcourse->summary); // required
                 $created = date('Y-m-d H:i:s'); // required
                 $modified = ''; // can't assign yet duh
                 $expiry_date = ''; // optional
@@ -368,6 +384,14 @@ if($lasthash != $hash):
                 // $audience_id = $_POST['audience_id']; // required
                 $audience_id = map_audience_to_id($feedcourse->_audience);
 
+                $searchcombine = $name . ' ';
+                $searchcombine .= $description . ' ';
+                $searchcombine .= $feedcourse->_topic . ' ';
+                $searchcombine .= $feedcourse->_learning_partner . ' ';
+                $searchcombine .= $feedcourse->delivery_method . ' ';
+                $searchcombine .= $feedcourse->_group . ' ';
+                $searchcombine .= $feedcourse->_audience . ' ';
+
                 // Construct SQL query
                 $sql = "INSERT INTO courses (
                                         status,
@@ -382,6 +406,7 @@ if($lasthash != $hash):
                                         course_id,
                                         weight,
                                         url,
+                                        search,
                                         keywords,
                                         refresh_cycle,
                                         partner_id,
@@ -403,6 +428,7 @@ if($lasthash != $hash):
                                         :course_id,
                                         :weight,
                                         :url,
+                                        :search,
                                         :keywords,
                                         :refresh_cycle,
                                         :partner_id,
@@ -427,6 +453,7 @@ if($lasthash != $hash):
                 $statement->bindValue(':course_id',$course_id);
                 $statement->bindValue(':weight',$weight, PDO::PARAM_INT);
                 $statement->bindValue(':url',$url);
+                $statement->bindValue(':search',$searchcombine);
                 $statement->bindValue(':keywords',$keywords);
                 $statement->bindValue(':refresh_cycle',$refresh_cycle);
                 $statement->bindValue(':partner_id',$partner_id, PDO::PARAM_INT);

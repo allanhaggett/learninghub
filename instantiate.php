@@ -407,6 +407,7 @@ $db->query('CREATE TABLE IF NOT EXISTS "courses" (
     "course_id" INTEGER,
     "weight" INTEGER,
     "url" VARCHAR,
+    "search" TEXT,
     "keywords" VARCHAR,
     "refresh_cycle" TEXT,
     "partner_id" INTEGER,

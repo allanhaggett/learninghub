@@ -162,8 +162,7 @@ $sql = 'SELECT
             c.status = "published"
         AND ';
         if(!empty($_GET['s'])) {
-            $sql .= ' c.name LIKE "%' . $_GET['s'] . '%" OR';
-            $sql .= ' c.description LIKE "%' . $_GET['s'] . '%"';
+            $sql .= ' c.search LIKE :search';
         }
         if(!empty($_GET['topic'])) {
         foreach($_GET['topic'] as $tid) {
@@ -174,6 +173,10 @@ $sql = 'SELECT
         $sql .= ';';
 
 $statement = $db->prepare($sql);
+if(!empty($_GET['s'])) {
+    $sq = '%' . $_GET['s'] . '%';
+    $statement->bindValue(':search',$sq);
+}
 $result = $statement->execute();
 
 ?>
