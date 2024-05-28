@@ -10,7 +10,6 @@
  * Copyright 2011-2024 The Bootstrap Authors
  * Licensed under the Creative Commons Attribution 3.0 Unported License.
  */
-
 (() => {
   'use strict'
 
@@ -44,9 +43,9 @@
     }
 
     const themeSwitcherText = document.querySelector('#bd-theme-text')
-    const activeThemeIcon = document.querySelector('.theme-icon-active use')
+    const activeThemeIcon = document.querySelector('.theme-icon-active')
     const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
-    const svgOfActiveBtn = btnToActive.querySelector('svg use').getAttribute('href')
+    const svgOfActiveBtn = btnToActive.querySelector('i').getAttribute('data-icon')
 
     document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
       element.classList.remove('active')
@@ -55,7 +54,7 @@
 
     btnToActive.classList.add('active')
     btnToActive.setAttribute('aria-pressed', 'true')
-    activeThemeIcon.setAttribute('href', svgOfActiveBtn)
+    activeThemeIcon.setAttribute('data-icon', svgOfActiveBtn)
     const themeSwitcherLabel = `${themeSwitcherText.textContent} (${btnToActive.dataset.bsThemeValue})`
     themeSwitcher.setAttribute('aria-label', themeSwitcherLabel)
 

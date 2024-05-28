@@ -59,30 +59,30 @@
     </form>
     <ul class="navbar-nav mb-2 mb-lg-0 order-1 order-lg-2">
     <li class="nav-item dropdown">
-            <button class="btn btn-link nav-link py-2 px-0 px-lg-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown" data-bs-display="static" aria-label="Toggle theme (dark)">
-              <svg width="16" height="16" class="bi my-1 theme-icon-active"><use href="#moon-stars-fill"></use></svg>
-              <span class="ms-2" id="bd-theme-text">Toggle theme</span>
+            <button class="btn btn-link nav-link ml-3 py-2 px-0 px-lg-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown" data-bs-display="static" aria-label="Toggle theme (dark)">
+              <i class="bi bi-moon-stars-fill theme-icon-active"></i>
+              <span class="d-none ms-2" id="bd-theme-text">Toggle theme</span>
             </button>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme-text">
               <li>
                 <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
-                  <svg width="16" height="16" class="bi me-2 opacity-50"><use href="#sun-fill"></use></svg>
+                  <i class="bi bi-sun-fill me-2" data-icon="bi-sun-fill"></i>
                   Light
-                  <svg width="16" height="16" class="bi ms-auto d-none"><use href="#check2"></use></svg>
+                  <i class="bi bi-check2 d-none" data-icon="check2"></i>
                 </button>
               </li>
               <li>
                 <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="dark" aria-pressed="true">
-                  <svg width="16" height="16" class="bi me-2 opacity-50"><use href="#moon-stars-fill"></use></svg>
+                  <i class="bi bi-moon-stars-fill me-2" data-icon="bi-moon-stars-fill"></i>
                   Dark
-                  <svg width="16" height="16" class="bi ms-auto d-none"><use href="#check2"></use></svg>
+                  <i class="bi bi-check2 d-none" data-icon="check2"></i>
                 </button>
               </li>
               <li>
                 <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto" aria-pressed="false">
-                  <svg width="16" height="16" class="bi me-2 opacity-50"><use href="#circle-half"></use></svg>
+                  <i class="bi bi-circle-half me-2" data-icon="bi-circle-half"></i>
                   Auto
-                  <svg width="16" height="16" class="bi ms-auto d-none"><use href="#check2"></use></svg>
+                  <i class="bi bi-check2 d-none" data-icon="check2"></i>
                 </button>
               </li>
             </ul>

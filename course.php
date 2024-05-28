@@ -65,7 +65,7 @@ $result = $statement->execute();
         <div>Delivery Method: <a href="filter.php?dmethod=<?= $row['dmid'] ?>"><?= $row['dmname'] ?></a></div>
         <div>Group: <a href="filter.php?group=<?= $row['groupid'] ?>"><?= $row['groupname'] ?></a></div>
         <div>Audience: <a href="filter.php?audience=<?= $row['audienceid'] ?>"><?= $row['audiencename'] ?></a></div>
-        <div>Topic: <a href="filter.php?topic=<?= $row['topicid'] ?>"><?= $row['topicname'] ?></a></div>
+        <div>Topic: <a href="filter.php?topic[]=<?= $row['topicid'] ?>"><?= $row['topicname'] ?></a></div>
         <div>Partner: <a href="filter.php?partner=<?= $row['partnerid'] ?>"><?= $row['partnername'] ?></a></div>
         <div>Platform: <a href="filter.php?platform=<?= $row['platformid'] ?>"><?= $row['platformname'] ?></a></div>
     </div>

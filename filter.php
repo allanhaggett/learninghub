@@ -36,7 +36,7 @@ if(!empty($_GET['topic'])) {
 
 <div class="container">
 
-<div class="row">
+<div class="row justify-content-md-center">
 <div class="col-md-3">
 
 <h2>Audiences</h2>
@@ -48,6 +48,7 @@ $result = $statement->execute();
 ?>
     <div class="p-3 mb-2 bg-light-subtle rounded-3">
 <?php while ($row = $result->fetchArray()): ?>
+    <?php if($row['id'] == 1) continue ?>
         <div><a  href="filter.php?audience=<?= $row['slug'] ?>"><?= $row['name'] ?></a></div>
         <?php endwhile ?>
     </div>
@@ -62,6 +63,7 @@ $result = $statement->execute();
 ?>
     <div class="p-3 mb-2 bg-light-subtle rounded-3">
 <?php while ($row = $result->fetchArray()): ?>
+    <?php if($row['id'] == 1) continue ?>
         <div><a  href="filter.php?group=<?= $row['slug'] ?>"><?= $row['name'] ?></a></div>
         <?php endwhile ?>
     </div>
@@ -76,6 +78,7 @@ $result = $statement->execute();
 ?>
     <div class="p-3 mb-2 bg-light-subtle rounded-3">
     <?php while ($row = $result->fetchArray()): ?>
+        <?php if($row['id'] == 1) continue ?>
     <?php 
     if(!empty($query['topic'])) {
         $urlquery = '';
@@ -108,6 +111,7 @@ $result = $statement->execute();
 ?>
 <div class="p-3 mb-2 bg-light-subtle rounded-3">
 <?php while ($row = $result->fetchArray()): ?>
+    <?php if($row['id'] == 1) continue ?>
     <div><a  href="filter.php?delivery_method=<?= $row['slug'] ?>"><?= $row['name'] ?></a></div>
 <?php endwhile ?>
 </div>
@@ -115,7 +119,7 @@ $result = $statement->execute();
 
 
 </div>
-<div class="col-md-6">
+<div class="col-md-8">
 
 <div class="p-3 mb-2 bg-light-subtle rounded-3">
 <div class="fw-bold">Filters:</div>

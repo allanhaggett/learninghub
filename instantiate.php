@@ -423,6 +423,23 @@ $db->query('CREATE TABLE IF NOT EXISTS "courses" (
     FOREIGN KEY(topic_id) REFERENCES topics(id)
 )');
 
+// Create platform_syncs table.
+$db->query('CREATE TABLE IF NOT EXISTS "platform_syncs" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    "created" DATETIME,
+    "platform_id" INTEGER,
+    "hash" TEXT,
+    "result" VARCHAR,
+    FOREIGN KEY(platform_id) REFERENCES learning_platforms(id)
+    )');
+$statement = $db->prepare('INSERT INTO "platform_syncs" ("created", "platform_id", "hash", "result") VALUES (:created, :platform_id, :hash, :result)');
+$statement->bindValue(':created', date('Y-m-d H:i:s'));
+$statement->bindValue(':platform_id', 1);
+$statement->bindValue(':hash', 'cd18a084a3c4f19c7cc582809c9c9e07');
+$statement->bindValue(':result', 'Success');
+$statement->execute(); 
+
+
 
 // Create journeys table.
 // $db->query('CREATE TABLE IF NOT EXISTS "journeys" (
