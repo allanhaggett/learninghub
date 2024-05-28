@@ -28,11 +28,13 @@
  * 
  */
 
+// If we don't set the timezone up front we have to convert from UTC and
+// and that's a pain we don't need.
 date_default_timezone_set('America/Los_Angeles');
 
 // We require numerous mapping functions for taxonomy terms which are listed
 // in English but we require an ID number.
-require('functions.php');
+require('bootstrap.php');
 
  // Open the database.
 $db = new SQLite3('courses.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
