@@ -1,5 +1,9 @@
 <?php
 
+// If we don't set the timezone up front we have to convert from UTC and
+// and that's a pain we don't need.
+date_default_timezone_set('America/Los_Angeles');
+
 // Create a new database, if the file doesn't exist and open it for reading/writing.
 // The extension of the file is arbitrary.
 $db = new SQLite3('courses.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);

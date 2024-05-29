@@ -60,8 +60,8 @@ $lastresult = $row['result'];
 // Which takes two separate ELM queries and merges the output into this
 // JSON feed.
 // Get the feed.
-// $url = 'https://learn.bcpublicservice.gov.bc.ca/learning-hub/learning-partner-courses.json';
-$url = 'platforms/psa-learning-system.json';
+$url = 'https://learn.bcpublicservice.gov.bc.ca/learning-hub/learning-partner-courses.json';
+// $url = 'platforms/psa-learning-system.json';
 $f = file_get_contents($url);
 $hash = md5($f);
 
@@ -110,6 +110,7 @@ if($lasthash != $hash):
                 c.created AS ccreated, 
                 c.status AS cstatus, 
                 c.description AS cdesc, 
+                c.search AS search, 
                 c.course_id AS courseid, 
                 c.url AS curl, 
                 c.keywords AS ckeys, 
@@ -202,8 +203,8 @@ if($lasthash != $hash):
             }
             
             // description
-            if($feedcourse->summary != $row['descriptiom']) {
-                $row['descriptiom'] = $feedcourse->summary;
+            if($feedcourse->summary != $row['cdesc']) {
+                $row['cdesc'] = $feedcourse->summary;
                 $courseupdated = 1;
             }
 
@@ -257,12 +258,14 @@ if($lasthash != $hash):
             if($courseupdated == 1) {
 
                 $searchcombine = $row['cname'] . ' ';
-                $searchcombine .= $row['descriptiom'] . ' ';
+                $searchcombine .= $row['cdesc'] . ' ';
                 $searchcombine .= $feedcourse->_topic . ' ';
                 $searchcombine .= $feedcourse->_learning_partner . ' ';
                 $searchcombine .= $feedcourse->delivery_method . ' ';
                 $searchcombine .= $feedcourse->_group . ' ';
                 $searchcombine .= $feedcourse->_audience . ' ';
+                $searchcombine .= $feedcourse->id . ' ';
+                $searchcombine .= $row['ckeys'] . ' ';
                 
                 // Construct SQL query
                 $sql = "UPDATE courses SET
@@ -292,7 +295,7 @@ if($lasthash != $hash):
                 $statement->bindValue(':modified',date('Y-m-d H:i:s'));
                 $statement->bindValue(':course_id',$row['courseid']);
                 $statement->bindValue(':url',$row['curl']);
-                $statement->bindValue(':search',$row['search']);
+                $statement->bindValue(':search',$searchcombine);
                 $statement->bindValue(':keywords',$row['ckeys']);
                 $statement->bindValue(':partner_id',$row['partnerid']);
                 $statement->bindValue(':dmethod_id',$row['dmid']);
@@ -391,6 +394,8 @@ if($lasthash != $hash):
                 $searchcombine .= $feedcourse->delivery_method . ' ';
                 $searchcombine .= $feedcourse->_group . ' ';
                 $searchcombine .= $feedcourse->_audience . ' ';
+                $searchcombine .= $feedcourse->id . ' ';
+                $searchcombine .= $feedcourse->_keywords . ' ';
 
                 // Construct SQL query
                 $sql = "INSERT INTO courses (
