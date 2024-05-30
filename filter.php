@@ -10,6 +10,7 @@ $db->enableExceptions(true);
 // Parse the URL as it's been passed and break it apart so we can 
 // build the URLs for filtering navigation
 $parts = parse_url($_SERVER['REQUEST_URI']);
+// print_r($parts['query']); exit;
 parse_str($parts['query'], $query);
 
 // What topic(s) are we filtering upon? There can be more than one topic
@@ -28,7 +29,12 @@ if(!empty($_GET['topic'])) {
     // echo $topsql; exit;
     $topicinfo = $db->prepare($topsql);
     $top = $topicinfo->execute();
+    $urlquery = $parts['query'];
+    // foreach($query['topic'] as $t) {
+    //     $urlquery .= '&topic[]=' . $row['id'];
+    // }
 }
+
 
 ?>
 <?php require('template/header.php') ?>
@@ -43,13 +49,17 @@ if(!empty($_GET['topic'])) {
 <p>Who is the learning for?</p>
 
 <?php
-$statement = $db->prepare('SELECT * FROM audiences;');
+$statement = $db->prepare('SELECT a.id, a.slug, a.name, a.description, COUNT(c.id) as ccount FROM audiences a LEFT JOIN courses c ON c.audience_id = a.id GROUP BY a.id, a.name;');
 $result = $statement->execute();
 ?>
     <div class="p-3 mb-2 bg-light-subtle rounded-3">
 <?php while ($row = $result->fetchArray()): ?>
     <?php if($row['id'] == 1) continue ?>
-        <div><a  href="filter.php?audience=<?= $row['slug'] ?>"><?= $row['name'] ?></a></div>
+        <div>
+            <a href="filter.php?audience=<?= $row['slug'] ?>">
+                <?= $row['name'] ?> (<?= $row['ccount'] ?>)
+            </a>
+        </div>
         <?php endwhile ?>
     </div>
 
@@ -58,13 +68,17 @@ $result = $statement->execute();
 <p>What type of learning is it?</p>
 
 <?php
-$statement = $db->prepare('SELECT * FROM groups;');
+$statement = $db->prepare('SELECT g.id, g.name, g.slug, g.description, COUNT(c.id) as ccount FROM groups g LEFT JOIN courses c ON g.id = c.group_id GROUP BY g.id, g.name;');
 $result = $statement->execute();
 ?>
     <div class="p-3 mb-2 bg-light-subtle rounded-3">
 <?php while ($row = $result->fetchArray()): ?>
     <?php if($row['id'] == 1) continue ?>
-        <div><a  href="filter.php?group=<?= $row['slug'] ?>"><?= $row['name'] ?></a></div>
+    <div>
+            <a href="filter.php?group=<?= $row['slug'] ?>">
+                <?= $row['name'] ?> (<?= $row['ccount'] ?>)
+            </a>
+        </div>
         <?php endwhile ?>
     </div>
 
@@ -73,32 +87,17 @@ $result = $statement->execute();
 <h2>Topics</h2>
 <p>What is the learning about?</p>
 <?php 
-$statement = $db->prepare('SELECT * FROM topics;');
+$statement = $db->prepare('SELECT t.id, t.name, t.description, COUNT(c.id) AS ccount FROM topics t LEFT JOIN courses c ON t.id = c.topic_id GROUP BY t.id, t.name;');
 $result = $statement->execute();
 ?>
     <div class="p-3 mb-2 bg-light-subtle rounded-3">
     <?php while ($row = $result->fetchArray()): ?>
         <?php if($row['id'] == 1) continue ?>
-    <?php 
-    if(!empty($query['topic'])) {
-        $urlquery = '';
-        foreach($query['topic'] as $t) {
-            if($t == $row['id']) { 
-                continue;
-            } else {
-                $urlquery .= '&topic[]=' . $row['id'];
-            }
-            // $urlquery .= '&topic[]=' . $t;
-        }
-    } else {
-        $urlquery .= '&topic[]=' . $row['id'];
-    }
-    ?>
-    <div>
-        <a href="filter.php?<?= $urlquery ?>">
-            <?= $row['name'] ?>
-        </a>
-    </div>
+        <div>
+            <a href="filter.php?<?= $urlquery ?>&topic[]=<?= $row['id'] ?>">
+                <?= $row['name'] ?> (<?= $row['ccount'] ?>)
+            </a>
+        </div>
     <?php endwhile ?>
     </div>
 
@@ -106,13 +105,17 @@ $result = $statement->execute();
 <p>How is the learning offered?</p>
 
 <?php
-$statement = $db->prepare('SELECT * FROM delivery_methods;');
+$statement = $db->prepare('SELECT dm.id, dm.name, dm.slug, dm.description, COUNT(c.id) AS ccount FROM delivery_methods dm LEFT JOIN courses c ON dm.id = c.dmethod_id GROUP BY dm.id, dm.name;');
 $result = $statement->execute();
 ?>
 <div class="p-3 mb-2 bg-light-subtle rounded-3">
 <?php while ($row = $result->fetchArray()): ?>
     <?php if($row['id'] == 1) continue ?>
-    <div><a  href="filter.php?delivery_method=<?= $row['slug'] ?>"><?= $row['name'] ?></a></div>
+    <div>
+        <a  href="filter.php?delivery_method=<?= $row['slug'] ?>">
+            <?= $row['name'] ?> (<?= $row['ccount'] ?>)
+        </a>
+    </div>
 <?php endwhile ?>
 </div>
 

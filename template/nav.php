@@ -57,10 +57,10 @@
             Search
         </button>
     </form>
-    <ul class="navbar-nav mb-2 mb-lg-0 order-1 order-lg-2">
+    <ul class="navbar-nav mb-2 mb-lg-0">
     <li class="nav-item dropdown">
             <button class="btn btn-link nav-link ml-3 py-2 px-0 px-lg-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown" data-bs-display="static" aria-label="Toggle theme (dark)">
-              <i class="bi bi-circle-half theme-icon-active"></i>
+              <span class="theme-icon-active"><i class="bi bi-circle-half"></i></span>
               <span class="d-none ms-2" id="bd-theme-text">Toggle theme</span>
             </button>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme-text">
@@ -90,3 +90,4 @@
     </ul>
 </div>
 </nav>
+<?php require('template/footer.php') ?>
