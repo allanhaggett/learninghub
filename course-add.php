@@ -103,7 +103,7 @@ else:
 ?>
 
 <?php require('template/header.php') ?>
-<?php require('template/nav.php') ?>
+
 
 <div class="container">
 <form method="post" action="course-add.php">

@@ -38,10 +38,8 @@ if(!empty($_GET['topic'])) {
 
 ?>
 <?php require('template/header.php') ?>
-<?php require('template/nav.php') ?>
 
 <div class="container">
-
 <div class="row justify-content-md-center">
 <div class="col-md-3">
 
@@ -52,7 +50,7 @@ if(!empty($_GET['topic'])) {
 $statement = $db->prepare('SELECT a.id, a.slug, a.name, a.description, COUNT(c.id) as ccount FROM audiences a LEFT JOIN courses c ON c.audience_id = a.id GROUP BY a.id, a.name;');
 $result = $statement->execute();
 ?>
-    <div class="p-3 mb-2 bg-light-subtle rounded-3">
+    <div class="p-3 mb-2 bg-dark-subtle rounded-3">
 <?php while ($row = $result->fetchArray()): ?>
     <?php if($row['id'] == 1) continue ?>
         <div>
@@ -71,7 +69,7 @@ $result = $statement->execute();
 $statement = $db->prepare('SELECT g.id, g.name, g.slug, g.description, COUNT(c.id) as ccount FROM groups g LEFT JOIN courses c ON g.id = c.group_id GROUP BY g.id, g.name;');
 $result = $statement->execute();
 ?>
-    <div class="p-3 mb-2 bg-light-subtle rounded-3">
+    <div class="p-3 mb-2 bg-dark-subtle rounded-3">
 <?php while ($row = $result->fetchArray()): ?>
     <?php if($row['id'] == 1) continue ?>
     <div>
@@ -90,7 +88,7 @@ $result = $statement->execute();
 $statement = $db->prepare('SELECT t.id, t.name, t.description, COUNT(c.id) AS ccount FROM topics t LEFT JOIN courses c ON t.id = c.topic_id GROUP BY t.id, t.name;');
 $result = $statement->execute();
 ?>
-    <div class="p-3 mb-2 bg-light-subtle rounded-3">
+    <div class="p-3 mb-2 bg-dark-subtle rounded-3">
     <?php while ($row = $result->fetchArray()): ?>
         <?php if($row['id'] == 1) continue ?>
         <div>
@@ -108,7 +106,7 @@ $result = $statement->execute();
 $statement = $db->prepare('SELECT dm.id, dm.name, dm.slug, dm.description, COUNT(c.id) AS ccount FROM delivery_methods dm LEFT JOIN courses c ON dm.id = c.dmethod_id GROUP BY dm.id, dm.name;');
 $result = $statement->execute();
 ?>
-<div class="p-3 mb-2 bg-light-subtle rounded-3">
+<div class="p-3 mb-2 bg-dark-subtle rounded-3">
 <?php while ($row = $result->fetchArray()): ?>
     <?php if($row['id'] == 1) continue ?>
     <div>
@@ -124,7 +122,7 @@ $result = $statement->execute();
 </div>
 <div class="col-md-8">
 
-<div class="p-3 mb-2 bg-light-subtle rounded-3">
+<div class="p-3 mb-2 bg-dark-subtle rounded-3">
 <div class="fw-bold">Filters:</div>
 <?php if(!empty($_GET['topic'])): ?>
 <?php while ($row = $top->fetchArray()): ?>
@@ -185,7 +183,8 @@ $result = $statement->execute();
 ?>
 
 <?php while ($row = $result->fetchArray()): ?>
-    <div class="p-3 mb-2 bg-light-subtle rounded-3">
+    <div class="p-3 mb-2 bg-dark-subtle rounded-3">
+        <div><a href="filter.php?dmethod=<?= $row['dmid'] ?>"><?= $row['dmname'] ?></a></div>
         <h2 class="fs-4"><a href="course.php?cid=<?= $row['cid'] ?>"><?= $row['cname'] ?></a></h2>
         <div class="mb-3"><?= $row['cdesc'] ?></div>
         <div class="my-3">
@@ -194,7 +193,6 @@ $result = $statement->execute();
                 <i class="bi bi-box-arrow-up-right"></i>
             </a>
         </div>
-        <div>Delivery Method: <a href="filter.php?dmethod=<?= $row['dmid'] ?>"><?= $row['dmname'] ?></a></div>
         <div>Group: <a href="filter.php?group=<?= $row['groupid'] ?>"><?= $row['groupname'] ?></a></div>
         <div>Audience: <a href="filter.php?audience=<?= $row['audienceid'] ?>"><?= $row['audiencename'] ?></a></div>
         <div>Topic: <a href="filter.php?topic[]=<?= $row['topicid'] ?>"><?= $row['topicname'] ?></a></div>

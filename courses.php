@@ -5,7 +5,7 @@ $db->enableExceptions(true);
 ?>
 
 <?php require('template/header.php') ?>
-<?php require('template/nav.php') ?>
+
 <div class="container">
 
 <div class="row">
@@ -50,7 +50,7 @@ $result = $statement->execute();
 ?>
 
 <?php while ($row = $result->fetchArray()): ?>
-    <div class="p-3 mb-2 bg-light-subtle shadow-lg">
+    <div class="p-3 mb-2 bg-dark-subtle rounded-3">
         <div><a class="fw-bold" href="course.php?cid=<?= $row['cid'] ?>"><?= $row['cname'] ?></a></div>
         <div class="mb-3"><?= $row['cdesc'] ?></div>
         <div class="my-3"><a class="btn text-white" style="background-color:#003366" href="<?= $row['curl'] ?>">Launch</a></div>

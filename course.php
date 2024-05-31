@@ -6,7 +6,7 @@ $db->enableExceptions(true);
 
 
 <?php require('template/header.php') ?>
-<?php require('template/nav.php') ?>
+
 
 <div class="container">
 
@@ -49,7 +49,7 @@ $statement = $db->prepare($sql);
 $result = $statement->execute();
 ?>
 <?php while ($row = $result->fetchArray()): ?>
-    <div class="p-3 mb-2 bg-light-subtle shadow-lg">
+    <div class="p-3 mb-2 bg-dark-subtle rounded-3">
         <div><?= strtoupper($row['cstatus']) ?></div>
         <h1><?= $row['cname'] ?></h1>
         <div class="mb-3"><?= $row['cdesc'] ?></div>

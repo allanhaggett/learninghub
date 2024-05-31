@@ -508,7 +508,6 @@ $statement->execute();
 ?>
 
 <?php require('template/header.php') ?>
-<?php require('template/nav.php') ?>
 
 <div class="container">
 
@@ -520,17 +519,17 @@ $statement->execute();
 <details class="p-3 mb-3 bg-dark-subtle rounded-3">
     <summary>Last run: <?= $lastrun ?> </summary>
     <div class="mt-3">
-        <?= $lastresult ?> <br>
-        <pre><?= $lasthash ?></pre>
+        Result: <?= $lastresult ?> <br>
+        <pre>Hash: <?= $lasthash ?></pre>
+        <div>Syncronized from:<br>
+            <a href="https://learn.bcpublicservice.gov.bc.ca/learning-hub/learning-partner-courses.json"
+                target="_blank">
+                    https://learn.bcpublicservice.gov.bc.ca/learning-hub/learning-partner-courses.json
+            </a>
+        </div> 
     </div>
 </details>
 
-<!-- <div>
-    <a href="https://learn.bcpublicservice.gov.bc.ca/learning-hub/learning-partner-courses.json"
-        target="_blank">
-            https://learn.bcpublicservice.gov.bc.ca/learning-hub/learning-partner-courses.json
-    </a>
-</div> -->
 
 <div class="p-3 mb-3 bg-dark-subtle rounded-3">
 <?php if($lasthash != $hash): ?>
