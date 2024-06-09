@@ -16,7 +16,7 @@ parse_str($parts['query'], $query);
 // What topic(s) are we filtering upon? There can be more than one topic
 // and we're using topic[]=1 parameter arrays 
 $topsql = 'SELECT * FROM topics WHERE '; 
-// echo $lastkey; exit;
+
 if(!empty($_GET['topic'])) {
     $lastkey = end($_GET['topic']);
     foreach($_GET['topic'] as $tid) {
@@ -34,105 +34,156 @@ if(!empty($_GET['topic'])) {
     //     $urlquery .= '&topic[]=' . $row['id'];
     // }
 }
-
-
 ?>
 <?php require('template/header.php') ?>
 
 <div class="container">
 <div class="row justify-content-md-center">
-<div class="col-md-3">
+<div class="col-md-4">
 
 
 
 <h2>Audiences</h2>
-<p>Who is the learning for?</p>
+<p class="mb-1">Who is the learning for?</p>
 <?php
-$statement = $db->prepare('SELECT a.id, a.slug, a.name, a.description, COUNT(c.id) as ccount FROM audiences a LEFT JOIN courses c ON c.audience_id = a.id GROUP BY a.id, a.name;');
+$statement = $db->prepare('SELECT a.id, a.slug, a.name, a.description, COUNT(c.id) as ccount FROM audiences a LEFT JOIN courses c ON c.audience_id = a.id WHERE c.status = "published" GROUP BY a.id, a.name;');
 $result = $statement->execute();
 ?>
-<div class="p-3 mb-2 bg-dark-subtle border border-secondary-subtle rounded-3">
+<form class="p-3 mb-3 bg-light-subtle border border-secondary-subtle rounded-3"
+        action="filter.php"
+        method="GET">
 <?php while ($row = $result->fetchArray()): ?>
 <?php if($row['id'] == 1) continue ?>
+<?php $active = '' ?>
+<?php if(!empty($_GET['audience']) && in_array($row['id'],$_GET['audience'])) $active = 'checked' ?>
 <div>
-    <a href="filter.php?audience=<?= $row['slug'] ?>">
+    <label>
+        <input type="checkbox" value="<?= $row['id'] ?>" name="audience[]" id="audience<?= $row['id'] ?>" <?= $active ?>>
         <?= $row['name'] ?>
-    </a> (<?= $row['ccount'] ?>)
+    </label>
+    (<?= $row['ccount'] ?>)
 </div>
 <?php endwhile ?>
-</div>
+<?php if(!empty($_GET['topic'])): ?>
+<?php foreach($_GET['topic'] as $tid): ?>
+<input type="hidden" name="topic[]" value="<?= $tid ?>">
+<?php endforeach ?>
+<?php endif ?>
+<button class="btn btn-sm bg-dark-subtle mt-2">Apply</button>
+</form>
 
 
 
 
 <h2>Groups</h2>
-<p>What type of learning is it?</p>
+<p class="mb-1">What type of learning is it?</p>
 
 <?php
 $statement = $db->prepare('SELECT g.id, g.name, g.slug, g.description, COUNT(c.id) as ccount FROM groups g LEFT JOIN courses c ON g.id = c.group_id GROUP BY g.id, g.name;');
 $result = $statement->execute();
 ?>
-    <div class="p-3 mb-2 bg-dark-subtle border border-secondary-subtle rounded-3">
+<form class="p-3 mb-3 bg-light-subtle border border-secondary-subtle rounded-3">
 <?php while ($row = $result->fetchArray()): ?>
-    <?php if($row['id'] == 1) continue ?>
-    <div>
-            <a href="filter.php?group=<?= $row['slug'] ?>">
-                <?= $row['name'] ?>
-            </a> (<?= $row['ccount'] ?>)
-        </div>
-        <?php endwhile ?>
-    </div>
+<?php if($row['id'] == 1) continue ?>
+<div>
+    <label>
+        <input type="checkbox" value="<?= $row['slug'] ?>">
+        <?= $row['name'] ?>
+    </label>
+    (<?= $row['ccount'] ?>)
+</div>
+<?php endwhile ?>
+<button class="btn btn-sm bg-dark-subtle mt-2">Apply</button>
+</form>
 
 
 
 <h2>Topics</h2>
-<p>What is the learning about?</p>
+<p class="mb-1">What is the learning about?</p>
 <?php 
-$statement = $db->prepare('SELECT t.id, t.name, t.description, COUNT(c.id) AS ccount FROM topics t LEFT JOIN courses c ON t.id = c.topic_id GROUP BY t.id, t.name;');
+$statement = $db->prepare('SELECT t.id, t.name, t.description, COUNT(c.id) AS ccount FROM topics t LEFT JOIN courses c ON t.id = c.topic_id WHERE c.status = "published" GROUP BY t.id, t.name;');
 $result = $statement->execute();
 ?>
-    <div class="p-3 mb-2 bg-dark-subtle border border-secondary-subtle rounded-3">
-    <?php while ($row = $result->fetchArray()): ?>
-        <?php if($row['id'] == 1) continue ?>
-        <div>
-            <a href="filter.php?<?= $urlquery ?>&topic[]=<?= $row['id'] ?>">
-                <?= $row['name'] ?>
-            </a> (<?= $row['ccount'] ?>)
-        </div>
-    <?php endwhile ?>
-    </div>
+<form class="p-3 mb-3 bg-light-subtle border border-secondary-subtle rounded-3"
+        action="filter.php"
+        method="GET">
+<?php if(!empty($_GET['audience'])): ?>
+<?php foreach($_GET['audience'] as $aid): ?>
+<input type="hidden" name="audience[]" value="<?= $aid ?>">
+<?php endforeach ?>
+<?php endif ?>
+<?php while ($row = $result->fetchArray()): ?>
+<?php if($row['id'] == 1) continue ?>
+<?php $active = '' ?>
+<?php if(!empty($_GET['topic']) && in_array($row['id'],$_GET['topic'])) $active = 'checked' ?>
+<div>
+    <label>
+        <input type="checkbox" value="<?= $row['id'] ?>" name="topic[]" id="topic<?= $row['id'] ?>" <?= $active ?>>
+        <?= $row['name'] ?>
+        (<?= $row['ccount'] ?>)
+    </label>
+</div>
+<?php endwhile ?>
+<button class="btn btn-sm bg-dark-subtle mt-2">Apply</button>
+</form>
 
 <h2>Delivery Methods</h2>
-<p>How is the learning offered?</p>
+<p class="mb-1">How is the learning offered?</p>
 
 <?php
 $statement = $db->prepare('SELECT dm.id, dm.name, dm.slug, dm.description, COUNT(c.id) AS ccount FROM delivery_methods dm LEFT JOIN courses c ON dm.id = c.dmethod_id GROUP BY dm.id, dm.name;');
 $result = $statement->execute();
 ?>
-<div class="p-3 mb-2 bg-dark-subtle border border-secondary-subtle rounded-3">
+<form class="p-3 mb-3 bg-light-subtle border border-secondary-subtle rounded-3">
 <?php while ($row = $result->fetchArray()): ?>
     <?php if($row['id'] == 1) continue ?>
     <div>
-        <a  href="filter.php?delivery_method=<?= $row['slug'] ?>">
+        <label>
+            <input type="checkbox" value="<?= $row['id'] ?>">
             <?= $row['name'] ?>
-        </a>  (<?= $row['ccount'] ?>)
+        </label>
+        (<?= $row['ccount'] ?>)
     </div>
 <?php endwhile ?>
-</div>
+<button class="btn btn-sm bg-dark-subtle mt-2">Apply</button>
+</form>
 
-
+<div style="height: 300px"></div>
 
 </div>
 <div class="col-md-8">
 
-<div class="fw-bold">Filters:</div>
-<div class="p-3 mb-4 bg-dark-subtle border border-secondary-subtle rounded-3">
-<?php if(!empty($_GET['topic'])): ?>
-<?php while ($row = $top->fetchArray()): ?>
-    <div><?= $row['name'] ?></div>
-<?php endwhile ?>
-<?php endif ?>
+    <div class="fw-bold">Filters:</div>
+
+    <div class="p-3 mb-3 bg-light-subtle border border-secondary-subtle rounded-3 d-flex">
+    <?php if(!empty($_GET['delivery_method'])): ?>
+        <div class="flex-fill">
+            <div>Delivery Method:</div>
+        </div>
+    <?php endif ?>
+    <?php if(!empty($_GET['group'])): ?>
+        <div class="flex-fill">
+            <div>Group:</div>
+        </div>
+    <?php endif ?>
+    <?php if(!empty($_GET['audience'])): ?>
+        <div class="flex-fill">
+            <div>Audience:</div>
+        </div>
+    <?php endif ?>
+    <?php if(!empty($_GET['topic'])): ?>
+        <div class="flex-fill">
+            <div>Topics:</div>
+            <?php while ($row = $top->fetchArray()): ?>
+            <div><button class="btn bg-dark-subtle btn-sm">x</button> <?= $row['name'] ?></div>
+            <?php endwhile ?>
+        </div>
+    <?php endif ?>
+
 </div>
+
+
+
 <?php
 
 // Setup initial query with all the joins
@@ -172,12 +223,26 @@ if(!empty($_GET['s'])) {
     $sql .= ' c.search LIKE :search';
 }
 
-// Topic filter
-if(!empty($_GET['topic'])) {
+// Audience filter
+if(!empty($_GET['audience'])) {
 
     if(!empty($_GET['s'])) {
         $sql .= ' AND ';
     }
+    $lastkey = end($_GET['audience']);
+    foreach($_GET['audience'] as $aid) {
+        $sql .= 'c.audience_id = ' . $aid;
+        if($aid != $lastkey) $sql .= ' OR ';
+    }
+}
+
+// Topic filter
+if(!empty($_GET['topic'])) {
+
+    if(!empty($_GET['audience'])) {
+        $sql .= ' AND ';
+    }
+    $lastkey = end($_GET['topic']);
     foreach($_GET['topic'] as $tid) {
         $sql .= 'c.topic_id = ' . $tid;
         if($tid != $lastkey) $sql .= ' OR ';
@@ -192,14 +257,34 @@ if(!empty($_GET['s'])) {
     $statement->bindValue(':search',$sq);
 }
 $result = $statement->execute();
-
+while($rows[] = $result->fetchArray()){} $count = count($rows);
 ?>
+<div class="mb-3 d-flex">
+    <div class="mr-3 pt-1 fw-bold"><?= $count - 1 ?> courses</div>
+    <div class="dropdown px-2">
+        <button class="btn btn-sm bg-dark-subtle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Sort by
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Most Recent</a></li>
+            <li><a class="dropdown-item" href="#">Alphabetical</a></li>
+            <li><a class="dropdown-item" href="#">Delivery Method</a></li>
+            <li><a class="dropdown-item" href="#">Group</a></li>
+            <li><a class="dropdown-item" href="#">Audience</a></li>
+            <li><a class="dropdown-item" href="#">Topic</a></li>
+        </ul>
+    </div>
+    <button id="expall" class="btn btn-sm bg-dark-subtle px-2 d-block">Expand All</button>
+    <button id="collapseall" class="btn btn-sm bg-dark-subtle px-2 d-block">Collapse All</button>
+</div>
+<div id="courselist">
+
 <?php while ($row = $result->fetchArray()): ?>
 <div class="bg-light-subtle p-2 mb-2 border border-secondary-subtle rounded-3">
     <details>
         <summary class="coursename mb-0 ms-3" style="list-style-position: outside;">
             <div class="d-flex justify-content-between">
-                <?= $row['cname'] ?>
+                <div class="fw-bold"><?= $row['cname'] ?></div>
                 <div class="text-muted text-decoration-none text-end flex-shrink-0 mt-1" style="font-size: 12px;">
                     <div class="ms-3">
                         <div title="Delivery Method">
@@ -275,6 +360,40 @@ $result = $statement->execute();
 
 <?php endwhile ?>
 </div>
+<div style="height: 300px"></div>
 </div>
 </div>
+</div>
+<script type="module">
+// ||||||||||||||||||||
+// 
+// Details/Summary niceties
+//
+// By default, all the courses are hidden behind a details/summary
+// and subsequently the description/launch links are as well.
+// This supports allowing the learner to choose to "expand all" and 
+// show everything on the page all at once, or "collapse all" and 
+// hide everything. 
+//
+// ||||||||||||||||||||
+
+// Show everything all in once fell swoop.
+let expall = document.getElementById('expall');
+expall.addEventListener('click', (e) => {
+    let steplist = document.getElementById('courselist');
+    let deets = steplist.querySelectorAll('details');
+    Array.from(deets).forEach(function(element) {
+        element.setAttribute('open','open');
+    });
+});
+// Conversley, "collapse all" hides everyting open in one fell swoop.
+let collapseall = document.getElementById('collapseall');
+collapseall.addEventListener('click', (e) => {
+    let steplist = document.getElementById('courselist');
+    let deets = steplist.querySelectorAll('details');
+    Array.from(deets).forEach(function(element) {
+        element.removeAttribute('open');
+    });
+});
+</script>
 <?php require('template/footer.php') ?>
