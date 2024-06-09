@@ -35,8 +35,8 @@ $result = $statement->execute();
     <div class="p-3 mb-2 bg-dark-subtle rounded-3">
         <div>
             <a class="fw-bold" href="filter.php?audience=<?= $row['id'] ?>">
-                <?= $row['name'] ?> (<?= $row['ccount'] ?>)
-            </a>
+                <?= $row['name'] ?>
+            </a> (<?= $row['ccount'] ?>)
         </div>
         <div><?= $row['description'] ?></div>
     </div>
@@ -55,8 +55,8 @@ $result = $statement->execute();
     <div class="p-3 mb-2 bg-dark-subtle rounded-3">
      <div>
         <a class="fw-bold" href="filter.php?group=<?= $row['id'] ?>">
-            <?= $row['name'] ?> (<?= $row['ccount'] ?>)
-        </a>
+            <?= $row['name'] ?>
+        </a> (<?= $row['ccount'] ?>)
     </div>
     <div><?= $row['description'] ?></div>
     </div>
@@ -74,8 +74,8 @@ $result = $statement->execute();
     <div class="p-3 mb-2 bg-dark-subtle rounded-3">
         <div>
             <a class="fw-bold" href="filter.php?delivery_method=<?= $row['id'] ?>">
-                <?= $row['name'] ?> (<?= $row['ccount'] ?>)
-            </a>
+                <?= $row['name'] ?>
+            </a> (<?= $row['ccount'] ?>)
         </div>
         <div><?= $row['description'] ?></div>
     </div>
@@ -97,8 +97,8 @@ $result = $statement->execute();
     <div class="p-3 mb-2 bg-dark-subtle rounded-3">
     <div>
         <a class="fw-bold" href="filter.php?topic[]=<?= $row['id'] ?>">
-            <?= $row['name'] ?> (<?= $row['ccount'] ?>)
-        </a>
+            <?= $row['name'] ?>
+        </a> (<?= $row['ccount'] ?>)
     </div>
     <div><?= $row['description'] ?></div>
     </div>
