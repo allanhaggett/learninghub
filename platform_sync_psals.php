@@ -110,6 +110,7 @@ if($lasthash != $hash):
                 c.created AS ccreated, 
                 c.status AS cstatus, 
                 c.description AS cdesc, 
+                c.platform_last_updated AS cplatup, 
                 c.search AS search, 
                 c.course_id AS courseid, 
                 c.url AS curl, 
@@ -142,14 +143,6 @@ if($lasthash != $hash):
     $statement = $db->prepare($sql);
     $result = $statement->execute();
 
-    // $countsql = "SELECT count(*) FROM courses;";
-    // $statement = $db->prepare($countsql);
-    // $coursecount = $statement->execute();
-    // print_r($coursecount); exit;
-    // Also how many courses are we talking about?
-    // $nRows = $db->query('select count(*) from blah')->fetchColumn(); 
-    // echo $nRows; exit;
-
     //
     // Create the array to array_push the existing course titles into
     $courseindex = [];
@@ -159,7 +152,6 @@ if($lasthash != $hash):
     $newlyprivatecourses = [];
     $nochangecourses = [];
     // Loop though all the PSALS courses in the system.
-    // echo '<pre>';print_r($result->fetchArray()); exit;
     $count = 1;
     while ($row = $result->fetchArray()):
         
@@ -205,6 +197,12 @@ if($lasthash != $hash):
             // description
             if($feedcourse->summary != $row['cdesc']) {
                 $row['cdesc'] = $feedcourse->summary;
+                $courseupdated = 1;
+            }
+            
+            // platform last updated date
+            if($feedcourse->date_modified != $row['cplatup']) {
+                $row['cplatup'] = $feedcourse->date_modified;
                 $courseupdated = 1;
             }
 
@@ -273,6 +271,7 @@ if($lasthash != $hash):
                                         name = :name,
                                         slug = :slug,
                                         description = :description,
+                                        platform_last_updated = :platform_last_updated,
                                         modified = :modified,
                                         course_id = :course_id,
                                         url = :url,
@@ -292,6 +291,7 @@ if($lasthash != $hash):
                 $statement->bindValue(':name',$row['cname']);
                 $statement->bindValue(':slug',$row['cslug']);
                 $statement->bindValue(':description',$row['cdesc']);
+                $statement->bindValue(':platform_last_updated',$row['cplatup']);
                 $statement->bindValue(':modified',date('Y-m-d H:i:s'));
                 $statement->bindValue(':course_id',$row['courseid']);
                 $statement->bindValue(':url',$row['curl']);
@@ -361,6 +361,7 @@ if($lasthash != $hash):
                             )
                         );
                 $description = trim($feedcourse->summary); // required
+                $cplatup = trim($feedcourse->date_modified); // required
                 $created = date('Y-m-d H:i:s'); // required
                 $modified = ''; // can't assign yet duh
                 $expiry_date = ''; // optional
@@ -404,6 +405,7 @@ if($lasthash != $hash):
                                         name,
                                         slug,
                                         description,
+                                        platform_last_updated,
                                         created,
                                         modified,
                                         expiry_date,
@@ -426,6 +428,7 @@ if($lasthash != $hash):
                                         :name,
                                         :slug,
                                         :description,
+                                        :platform_last_updated,
                                         :created,
                                         :modified,
                                         :expiry_date,
@@ -451,6 +454,7 @@ if($lasthash != $hash):
                 $statement->bindValue(':name',$name);
                 $statement->bindValue(':slug',$slug);
                 $statement->bindValue(':description',$description);
+                $statement->bindValue(':platform_last_updated',$cplatup);
                 $statement->bindValue(':created',$created);
                 $statement->bindValue(':modified',$modified);
                 $statement->bindValue(':expiry_date',$expiry_date);

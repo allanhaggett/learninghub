@@ -406,6 +406,7 @@ $db->query('CREATE TABLE IF NOT EXISTS "courses" (
     "description" VARCHAR NOT NULL,
     "created" DATETIME NOT NULL,
     "modified" DATETIME,
+    "platform_last_updated" DATETIME,
     "expiry_date" DATETIME,
     "user_idir" VARCHAR,
     "course_id" INTEGER,
