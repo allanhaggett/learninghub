@@ -43,7 +43,10 @@ $sql = 'SELECT
         JOIN learning_partners pa ON pa.id = c.partner_id
         JOIN learning_platforms plat ON plat.id = c.platform_id
         WHERE 
-            c.status = "published";';
+            c.status = "published"
+        ORDER BY 
+            c.platform_last_updated
+        DESC;';
             
 $statement = $db->prepare($sql);
 $result = $statement->execute();
