@@ -9,15 +9,41 @@ $db->enableExceptions(true);
 
 // Parse the URL as it's been passed and break it apart so we can 
 // build the URLs for filtering navigation
-$parts = parse_url($_SERVER['REQUEST_URI']);
+// $parts = parse_url($_SERVER['REQUEST_URI']);
 // print_r($parts['query']); exit;
-parse_str($parts['query'], $query);
+// parse_str($parts['query'], $query);
+// $urlquery = $parts['query'];
 
 // What topic(s) are we filtering upon? There can be more than one topic
 // and we're using topic[]=1 parameter arrays 
-$topsql = 'SELECT * FROM topics WHERE '; 
-
+if(!empty($_GET['audience'])) {
+    $audsql = 'SELECT * FROM audiences WHERE '; 
+    $lastkey = end($_GET['audience']);
+    foreach($_GET['audience'] as $aid) {
+        $audsql .= 'id = ' . $aid;
+        if($aid != $lastkey) {
+            $audsql .= ' OR ';
+        }
+    }
+    $audsql .= ';';
+    $audinfo = $db->prepare($audsql);
+    $aud = $audinfo->execute();
+}
+if(!empty($_GET['group'])) {
+    $topsql = 'SELECT * FROM groups WHERE '; 
+    $lastkey = end($_GET['group']);
+    foreach($_GET['group'] as $gid) {
+        $grpsql .= 'id = ' . $gid;
+        if($gid != $lastkey) {
+            $grpsql .= ' OR ';
+        }
+    }
+    $grpsql .= ';';
+    $grpinfo = $db->prepare($grpsql);
+    $grp = $grpinfo->execute();
+}
 if(!empty($_GET['topic'])) {
+    $topsql = 'SELECT * FROM topics WHERE '; 
     $lastkey = end($_GET['topic']);
     foreach($_GET['topic'] as $tid) {
         $topsql .= 'id = ' . $tid;
@@ -26,14 +52,10 @@ if(!empty($_GET['topic'])) {
         }
     }
     $topsql .= ';';
-    // echo $topsql; exit;
     $topicinfo = $db->prepare($topsql);
     $top = $topicinfo->execute();
-    $urlquery = $parts['query'];
-    // foreach($query['topic'] as $t) {
-    //     $urlquery .= '&topic[]=' . $row['id'];
-    // }
 }
+
 ?>
 <?php require('template/header.php') ?>
 
@@ -164,11 +186,17 @@ $result = $statement->execute();
     <?php if(!empty($_GET['group'])): ?>
         <div class="flex-fill">
             <div>Group:</div>
+            <?php while ($row = $grp->fetchArray()): ?>
+            <div><button class="btn bg-dark-subtle btn-sm">x</button> <?= $row['name'] ?></div>
+            <?php endwhile ?>
         </div>
     <?php endif ?>
     <?php if(!empty($_GET['audience'])): ?>
         <div class="flex-fill">
             <div>Audience:</div>
+            <?php while ($row = $aud->fetchArray()): ?>
+            <div><button class="btn bg-dark-subtle btn-sm">x</button> <?= $row['name'] ?></div>
+            <?php endwhile ?>
         </div>
     <?php endif ?>
     <?php if(!empty($_GET['topic'])): ?>
@@ -185,7 +213,7 @@ $result = $statement->execute();
 
 
 <?php
-
+// if(!empty($_GET['s']) && !empty($_GET['audience']) && !empty($_GET['topic'])) :
 // Setup initial query with all the joins
 $sql = 'SELECT 
             c.id AS cid, 
@@ -228,7 +256,8 @@ if(!empty($_GET['audience'])) {
 
     if(!empty($_GET['s'])) {
         $sql .= ' AND ';
-    }
+        }
+    $sql .= ' (';
     $lastkey = end($_GET['audience']);
     foreach($_GET['audience'] as $aid) {
         $sql .= 'c.audience_id = ' . $aid;
@@ -240,7 +269,9 @@ if(!empty($_GET['audience'])) {
 if(!empty($_GET['topic'])) {
 
     if(!empty($_GET['audience'])) {
-        $sql .= ' AND ';
+        $sql .= ') AND (';
+    } else {
+        $sql .= ' (';
     }
     $lastkey = end($_GET['topic']);
     foreach($_GET['topic'] as $tid) {
@@ -248,7 +279,8 @@ if(!empty($_GET['topic'])) {
         if($tid != $lastkey) $sql .= ' OR ';
     }
 }
-$sql .= ' ORDER BY platform_last_updated DESC;';
+$sql .= ') ORDER BY platform_last_updated DESC;';
+// echo '<pre>' . $sql . '</pre>';
 
 $statement = $db->prepare($sql);
 
@@ -359,6 +391,7 @@ while($rows[] = $result->fetchArray()){} $count = count($rows);
 
 
 <?php endwhile ?>
+
 </div>
 <div style="height: 300px"></div>
 </div>
@@ -396,4 +429,5 @@ collapseall.addEventListener('click', (e) => {
     });
 });
 </script>
+
 <?php require('template/footer.php') ?>
