@@ -66,7 +66,7 @@ if(!empty($_GET['topic'])) {
 
 
 <h2>Audiences</h2>
-<p class="mb-1">Who is the learning for?</p>
+<!-- <p class="mb-1">Who is the learning for?</p> -->
 <?php
 $statement = $db->prepare('SELECT a.id, a.slug, a.name, a.description, COUNT(c.id) as ccount FROM audiences a LEFT JOIN courses c ON c.audience_id = a.id WHERE c.status = "published" GROUP BY a.id, a.name;');
 $result = $statement->execute();
@@ -98,7 +98,7 @@ $result = $statement->execute();
 
 
 <h2>Groups</h2>
-<p class="mb-1">What type of learning is it?</p>
+<!-- <p class="mb-1">What type of learning is it?</p> -->
 
 <?php
 $statement = $db->prepare('SELECT g.id, g.name, g.slug, g.description, COUNT(c.id) as ccount FROM groups g LEFT JOIN courses c ON g.id = c.group_id GROUP BY g.id, g.name;');
@@ -121,7 +121,7 @@ $result = $statement->execute();
 
 
 <h2>Topics</h2>
-<p class="mb-1">What is the learning about?</p>
+<!-- <p class="mb-1">What is the learning about?</p> -->
 <?php 
 $statement = $db->prepare('SELECT t.id, t.name, t.description, COUNT(c.id) AS ccount FROM topics t LEFT JOIN courses c ON t.id = c.topic_id WHERE c.status = "published" GROUP BY t.id, t.name;');
 $result = $statement->execute();
@@ -150,7 +150,7 @@ $result = $statement->execute();
 </form>
 
 <h2>Delivery Methods</h2>
-<p class="mb-1">How is the learning offered?</p>
+<!-- <p class="mb-1">How is the learning offered?</p> -->
 
 <?php
 $statement = $db->prepare('SELECT dm.id, dm.name, dm.slug, dm.description, COUNT(c.id) AS ccount FROM delivery_methods dm LEFT JOIN courses c ON dm.id = c.dmethod_id GROUP BY dm.id, dm.name;');
@@ -255,21 +255,23 @@ if(!empty($_GET['s'])) {
 if(!empty($_GET['audience'])) {
 
     if(!empty($_GET['s'])) {
-        $sql .= ' AND ';
-        }
-    $sql .= ' (';
+        $sql .= ' AND (';
+    } else {
+        $sql .= ' (';
+    }
     $lastkey = end($_GET['audience']);
     foreach($_GET['audience'] as $aid) {
         $sql .= 'c.audience_id = ' . $aid;
         if($aid != $lastkey) $sql .= ' OR ';
     }
+    $sql .= ')';
 }
 
 // Topic filter
 if(!empty($_GET['topic'])) {
 
     if(!empty($_GET['audience'])) {
-        $sql .= ') AND (';
+        $sql .= ' AND (';
     } else {
         $sql .= ' (';
     }
@@ -278,8 +280,9 @@ if(!empty($_GET['topic'])) {
         $sql .= 'c.topic_id = ' . $tid;
         if($tid != $lastkey) $sql .= ' OR ';
     }
+    $sql .= ')';
 }
-$sql .= ') ORDER BY platform_last_updated DESC;';
+$sql .= ' ORDER BY platform_last_updated DESC;';
 // echo '<pre>' . $sql . '</pre>';
 
 $statement = $db->prepare($sql);
@@ -412,9 +415,9 @@ while($rows[] = $result->fetchArray()){} $count = count($rows);
 
 // Show everything all in once fell swoop.
 let expall = document.getElementById('expall');
+let steplist = document.getElementById('courselist');
+let deets = steplist.querySelectorAll('details');
 expall.addEventListener('click', (e) => {
-    let steplist = document.getElementById('courselist');
-    let deets = steplist.querySelectorAll('details');
     Array.from(deets).forEach(function(element) {
         element.setAttribute('open','open');
     });
@@ -422,8 +425,6 @@ expall.addEventListener('click', (e) => {
 // Conversley, "collapse all" hides everyting open in one fell swoop.
 let collapseall = document.getElementById('collapseall');
 collapseall.addEventListener('click', (e) => {
-    let steplist = document.getElementById('courselist');
-    let deets = steplist.querySelectorAll('details');
     Array.from(deets).forEach(function(element) {
         element.removeAttribute('open');
     });
